@@ -1,0 +1,30 @@
+.readerlogo {
+  background: transparent url('/images/logo.png') no-repeat;
+  width:150px;
+  height:150px;
+}
+.showable {
+  display: none
+}
+
+body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+}
+
+.mb20 {
+  margin-bottom:20px;
+}
+
+.pb20 {
+  padding-bottom:20px;
+}
+
+.mr10 {
+  margin-right:10px;
+}
+
+.line {
+  margin-bottom:10px;
+  border-top:1px solid #888;
+}

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="1.0">
+    <head>
+        <title>Example subscriptions from Google Reader</title>
+    </head>
+    <body>
+        <outline title="BBC" text="BBC">
+            <outline text="BBC Click" title="BBC Click" type="rss"
+                xmlUrl="http://newsrss.bbc.co.uk/rss/newsonline_uk_edition/programmes/click_online/rss.xml" htmlUrl="http://news.bbc.co.uk/go/rss/-/1/hi/programmes/click_online/default.stm"/>
+            <outline text="BBC Entertainment" title="BBC Entertainment"
+                type="rss"
+                xmlUrl="http://newsrss.bbc.co.uk/rss/newsonline_uk_edition/entertainment/rss.xml" htmlUrl="http://www.bbc.co.uk/news/entertainment_and_arts/#sa-ns_mchannel=rss&amp;ns_source=PublicRSS20-sa"/>
+            <outline text="BBC Internet Blog" title="BBC Internet Blog"
+                type="rss"
+                xmlUrl="http://www.bbc.co.uk/blogs/bbcinternet/rss.xml" htmlUrl="http://www.bbc.co.uk/blogs/internet"/>
+            <outline text="BBC MFC" title="BBC MFC" type="rss"
+                xmlUrl="http://newsrss.bbc.co.uk/rss/sportonline_uk_edition/football/teams/m/middlesbrough/rss.xml" htmlUrl="http://www.bbc.co.uk/sport/football/teams/middlesbrough"/>
+        </outline>
+        <outline title="Apple" text="Apple">
+            <outline text="Apple News" title="Apple News" type="rss"
+                xmlUrl="http://images.apple.com/uk/main/rss/hotnews/hotnews.rss" htmlUrl="http://www.apple.com/uk/hotnews/"/>
+            <outline text="AppleInsider" title="AppleInsider" type="rss"
+                xmlUrl="http://www.appleinsider.com/appleinsider.rss" htmlUrl="http://appleinsider.com"/>
+            <outline text="Mac Rumors" title="Mac Rumors" type="rss"
+                xmlUrl="http://www.macrumors.com/macrumors.xml" htmlUrl="http://www.macrumors.com"/>
+        </outline>
+    </body>
+</opml>

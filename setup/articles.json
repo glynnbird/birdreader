@@ -1,0 +1,17 @@
+{
+	"documents": [
+		 {
+       "_id": "_design/matching",
+       "language": "javascript",
+       "views": {
+					 "matchByQueueName": {
+							 "map": "function(doc) { emit([doc.queue_name, doc.locked], null); }"
+					 },
+					 "matchByType": {
+                "map": "function(doc) { if (doc.data.type && doc.data.id) { emit([doc.data.type, doc.data.id], null); } }"
+            }
+       }
+    }	
+	]
+}
+
