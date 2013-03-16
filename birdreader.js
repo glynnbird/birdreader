@@ -48,6 +48,7 @@ app.get('/unread', function(req, res) {
   article.unreadArticles(function(err,data) {
     
     // add the articles to our data array
+    page.title='Unread';
     page.articles = data;
     
     // render the page
@@ -63,6 +64,7 @@ app.get('/read', function(req, res) {
   article.readArticles(function(err,data) {
     
     // add the articles to our data array
+    page.title='Read';
     page.articles = data;
     
     // render the page
@@ -78,6 +80,7 @@ app.get('/starred', function(req, res) {
   article.starredArticles(function(err,data) {
     
     // add the articles to our data array
+    page.title='Starred';
     page.articles = data;
     
     // render the page
@@ -94,10 +97,18 @@ app.get('/api/:id/read', function(req,res) {
   });
 })
 
-// start an article 
+// star an article 
 app.get('/api/:id/star', function(req,res) {
   // mark the supplied article as starred
   article.star(req.params.id,function(data) { 
+      res.send(data)
+  });
+})
+
+// unstar an article 
+app.get('/api/:id/unstar', function(req,res) {
+  // mark the supplied article as un-starred
+  article.unstar(req.params.id,function(data) { 
       res.send(data)
   });
 })

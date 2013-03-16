@@ -7,7 +7,13 @@ html(lang='en')
     
     div.container
 
-
+      div.hero-unit
+        h1 #{title}
+        p 
+        p #{articles.length} #{title} articles
+        p 
+        div.spacer
+      
       ol
         each article in articles
           li(id=article._id)
@@ -16,15 +22,20 @@ html(lang='en')
                 span.tags
                   each tag in article.tags  
                     span.label.mr10= tag
-              div.title= article.title
+              div.title
+                a(href="Javascript:readArticle('"+article._id+"')")= article.title
                 a.close(href="Javascript:removeArticle('"+article._id+"')") &times;
               div.expand
                 a.mr10(id="expand"+article._id,href="Javascript:readArticle('"+article._id+"')") Expand
                 a.mr10.tobeshown(id="hide"+article._id,href="Javascript:hideArticle('"+article._id+"')") Hide
               div.showable.pb20(id="body"+article._id)
                 a.btn.btn-success.mr10(href=article.link,target='_blank') Go
-                a.btn(id="star"+article._id,href="Javascript:starArticle('"+article._id+"')")
-                  i.icon-star
+                - if (article.starred)
+                  a.btn-warning.btn(id="star"+article._id,href="Javascript:unstarArticle('"+article._id+"')")
+                    i.icon-star
+                - else
+                  a.btn(id="star"+article._id,href="Javascript:starArticle('"+article._id+"')")
+                    i.icon-star                 
                 div.mb10
                 div(id="description"+article._id) 
                 div.mb10

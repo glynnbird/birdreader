@@ -76,6 +76,10 @@ li {
 .title {
   fine-size:14px;
 }
+.title a:link, .title a:visited {
+  text-decoration: none;
+  color:#666;
+}
 .tags {
   margin-left:15px;
 }

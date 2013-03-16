@@ -74,7 +74,7 @@ var markRead = function(id, callback) {
   });
 }
 
-// mark an article as read
+// mark an article as starred
 var star = function(id, callback) {
   
   // fetch the article
@@ -100,10 +100,37 @@ var star = function(id, callback) {
   });
 }
 
+// mark an article as read
+var unstar = function(id, callback) {
+  
+  // fetch the article
+  articles.get(id, function(err, doc) {
+    if (!err) {
+      // mark its star flag as true
+      if(typeof doc.starred == "undefined" || doc.starred==true) {
+        doc.starred=false;
+
+        // write it back
+        articles.insert(doc,function(err,data) {
+
+        });
+        callback(doc);
+      } else {
+        callback(doc);
+      }
+
+    } else {
+      callback(false)
+    }
+
+  });
+}
+
 module.exports = {
   unreadArticles: unreadArticles,
   readArticles: readArticles,
   starredArticles: starredArticles,
   markRead: markRead,
-  star: star
+  star: star,
+  unstar: unstar
 }

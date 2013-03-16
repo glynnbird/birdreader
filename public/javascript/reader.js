@@ -6,17 +6,25 @@ var apiMarkAsRead=function(id) {
 }
 
 var apiStar=function(id) {
-  $.get("/api/"+id+"/star", function() {
+  $.getJSON("/api/"+id+"/star", function(data) {
     console.log("request made")
   })
-  .done(function() { console.log("success"); })
-  .fail(function() { console.log("error"); })
-  .always(function() { console.log("finished"); });
+}
+
+var apiUnstar=function(id) {
+  $.getJSON("/api/"+id+"/unstar", function() {
+    console.log("request made")
+  })
 }
 
 var starArticle = function(id) {
   apiStar(id);
   $('#star'+id).addClass('btn-warning');
+}
+
+var unstarArticle = function(id) {
+  apiUnstar(id);
+  $('#star'+id).removeClass('btn-warning');
 }
 
 var readArticle = function(id) {
