@@ -25,7 +25,7 @@ BirdReader is designed to be installed on your own webserver or laptop, running 
 
 ## How does it work?
 
-BirdReader doesn't store anything locally other than its source code and your configuration. The data is stored in Cloudant (CouchDB) database in the cloud.
+BirdReader doesn't store anything locally other than its source code and your configuration. The data is stored in a Cloudant (CouchDB) database in the cloud.
 You will need to sign up for a free Cloudant account (disclaimer: other hosted CouchDB services are available, and this code should work with any
 CouchDB server e.g. your own).
 
@@ -119,6 +119,14 @@ You will need Node.js and npm installed on your computer. Unpack the BirdReader 
   npm install
 ```
 
+Copy the sample configuration into place
+```
+  cd includes
+  cp _config.json config.json
+```
+
+Edit the sample configuration to point to your CouchDB server.
+
 Run Birdreader with
 
 ```
@@ -129,6 +137,20 @@ See the website by pointing your browser to port 3000:
 ```
   http://localhost:3000/
 ```
+
+## Importing Google Reader subscriptions
+
+You can export your Google Reader subscriptions using [Google Takeout](https://www.google.com/takeout/). Download the file, unpack it 
+and locate the subscriptions.xml file.
+
+You can import this into BirdReader with
+
+```
+  node import_opml.js subscriptions.xml
+```
+
+
+
 
 
 
