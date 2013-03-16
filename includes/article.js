@@ -23,12 +23,41 @@ var markRead = function(id, callback) {
   articles.get(id, function(err, doc) {
     if (!err) {
       // mark its read flag as true
-      doc.read=true;
+      if(typeof doc.read == "undefined" || doc.read==false) {
+        doc.read=true;
       
-      // write it back
-      articles.insert(doc,function(err,data) {
-        callback(err?false:true);
-      });
+        // write it back
+        articles.insert(doc,function(err,data) {
+          callback(err?false:true);
+        });
+      } else {
+        callback(true);
+      }
+    } else {
+      callback(false)
+    }
+
+  });
+}
+
+// mark an article as read
+var star = function(id, callback) {
+  
+  // fetch the article
+  articles.get(id, function(err, doc) {
+    if (!err) {
+      // mark its star flag as true
+      if(typeof doc.starred == "undefined" || doc.starred==false) {
+        doc.starred=true;
+
+        // write it back
+        articles.insert(doc,function(err,data) {
+          callback(err?false:true);
+        });
+      } else {
+        callback(true);
+      }
+
     } else {
       callback(false)
     }
@@ -38,5 +67,6 @@ var markRead = function(id, callback) {
 
 module.exports = {
   unreadArticles: unreadArticles,
-  markRead: markRead
+  markRead: markRead,
+  star: star
 }

@@ -45,6 +45,7 @@ var fetchFeed=function(feed,callback) {
         if(m) {
           a.pubDateTS = m.format("X");
           a.read=false;
+          a.starred=false;
           if(m.isAfter(newerThan)) {
             articles.push(a);
             if(m.isAfter(latest)) {

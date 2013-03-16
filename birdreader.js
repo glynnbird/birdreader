@@ -56,6 +56,14 @@ app.get('/api/:id/read', function(req,res) {
   });
 })
 
+// start an article 
+app.get('/api/:id/star', function(req,res) {
+  // mark the supplied article as starred
+  article.star(req.params.id,function() { 
+      res.send({ success: true})
+  });
+})
+
 // listen on port 3000
 app.listen(3000);
 console.log('Listening on port 3000');
