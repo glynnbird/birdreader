@@ -9,7 +9,7 @@ var apiMarkAsRead=function(id) {
 
 var readArticle = function(id) {
   console.log("readArticle",id)
-  $('#body'+id).show(1);
+  $('#body'+id).show();
   apiMarkAsRead(id);
 }
 

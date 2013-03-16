@@ -1,19 +1,34 @@
 .readerlogo {
-  background: transparent url('/images/logo.png') no-repeat;
-  width:150px;
-  height:150px;
+  background: transparent url('/images/icon.png') no-repeat;
+  padding-left:40px;
+  padding-top:8px;
+  display: block;
+  float: left;
+  font-size: 20px;
+  font-weight: 200;
+  line-height: 1;
+  color: #999;
 }
 .showable {
-  display: none
+  display: none;
+  background-color:white;
+  -moz-box-shadow: 0 0 5px #888;
+  -webkit-box-shadow: 0 0 5px#888;
+  box-shadow: 0 0 5px #888;
+  margin-top:10px;
+  padding:10px;
 }
 
 body {
-    padding-top: 60px;
-    padding-bottom: 40px;
+
 }
 
 .mb20 {
   margin-bottom:20px;
+}
+
+.mb10 {
+  margin-bottom:10px;
 }
 
 .pb20 {
@@ -28,3 +43,35 @@ body {
   margin-bottom:10px;
   border-top:1px solid #888;
 }
+
+ol {
+  margin:0;
+  list-style:none;
+}
+
+li {
+  display:block;
+}
+.tweet {
+  position: relative;
+  min-height: 51px;
+  padding: 9px 12px;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.feedName {
+  font-weight: bold;
+  color: #333;
+  font-size: 18px;
+  margin-bottom:5px;
+}
+.title {
+  fine-size:14px;
+}
+.tags {
+  margin-left:15px;
+}
+
+.expand a:link, .expand a:visited {
+  color: #999;
+} 
