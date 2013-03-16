@@ -4,9 +4,13 @@
 
 In March 2013, Google announced that Google Reader was to be closed. I used Google Reader every day so I set out to find a replacement.
 I started with other online offerings, but then I thought "I could build one". So I created BirdReader which I have released to the world
-in its highly unpolished "alpha".
+in its unpolished "alpha".
 
-BirdReader is designed to be installed on your own webserver or laptop, running Node.js. 
+BirdReader is designed to be installed on your own webserver or laptop, running Node.js. e.g.
+
+* on an old PC
+* on a cloud server e.g. AWS
+* on a [Raspberry Pi](http://www.raspberrypi.org/)
 
 ## Features
 
@@ -15,6 +19,7 @@ BirdReader is designed to be installed on your own webserver or laptop, running 
 * web-based aggregated newsfeed
 ** mark articles as read
 ** delete articles without reading
+** 'star' articles
 ** sorted in newest-first order
 ** bootstrap-based, responsive layout
 
@@ -84,4 +89,47 @@ Cloudant/CouchDB only allows data to be retrieved by its "_id" unless you define
 This allows us to query our data in three ways: unread articles, read articles or starred articles.
 
 ### Scraping articles
+
+Every so often, BirdReader fetches all the feeds using the [feedparser](https://npmjs.org/package/feedparser). Any articles newer than
+the feed's previous newest article is saved to the articles database.
+
+## What does it look like?
+
+The site is built with [Bootstrap](http://twitter.github.com/bootstrap/) so that it provides a decent interface on desktop and mobile browsers
+
+![mobile screenshot](https://github.com/glynnbird/birdreader/raw/master/public/images/mobile.png "Mobile screenshot")
+
+## Key technologies
+
+* [Node.js](http://nodejs.org/) - Server side Javascript
+* [Express](http://expressjs.com/) - Application framework for node
+* [feedparser](https://npmjs.org/package/feedparser) - RSS feed parser 
+* [Cloudant](https://cloudant.com/) - Hosted CouchDB
+* [async](https://npmjs.org/package/async) - Control your parallelism in Node.js
+* [Bootstrap](http://twitter.github.com/bootstrap/) - Twitter responsive HTML framework
+* [sax](https://npmjs.org/package/sax) - XML parser for Node.js
+
+## Installation
+
+You will need Node.js and npm installed on your computer. Unpack the BirdReader repository and install its dependencies e.g.
+
+```
+  git clone git@github.com:glynnbird/birdreader.git
+  cd birdreader
+  npm install
+```
+
+Run Birdreader with
+
+```
+  node birdreader.js
+```
+
+See the website by pointing your browser to port 3000:
+```
+  http://localhost:3000/
+```
+
+
+
 
