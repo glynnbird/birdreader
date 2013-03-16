@@ -24,12 +24,16 @@ var starArticle = function(id) {
 var readArticle = function(id) {
   console.log("readArticle",id)
   $('#body'+id).show();
+  $('#hide'+id).show();
+  $('#expand'+id).hide();
   apiMarkAsRead(id);
 }
 
 var hideArticle = function(id) {
   console.log("hide",id)
-  $('#body'+id).hide(1);
+  $('#body'+id).hide();
+  $('#hide'+id).hide();
+  $('#expand'+id).show();
 }
 
 var removeArticle = function(id) {

@@ -19,14 +19,15 @@ html(lang='en')
               div.title= article.title
                 a.close(href="Javascript:removeArticle('"+article._id+"')") &times;
               div.expand
-                a.mr10(href="Javascript:readArticle('"+article._id+"')") Expand
+                a.mr10(id="expand"+article._id,href="Javascript:readArticle('"+article._id+"')") Expand
+                a.mr10.tobeshown(id="hide"+article._id,href="Javascript:hideArticle('"+article._id+"')") Hide
               div.showable.pb20(id="body"+article._id)
-                div!= article.description
-                div.mb10
                 a.btn.btn-success.mr10(href=article.link,target='_blank') Go
-                a.btn.mr10(href="Javascript:hideArticle('"+article._id+"')") Hide  
                 a.btn(id="star"+article._id,href="Javascript:starArticle('"+article._id+"')")
                   i.icon-star
-              div.mb10
+                div.mb10
+                div!= article.description
+                div.mb10
+
  
     include includes/footer

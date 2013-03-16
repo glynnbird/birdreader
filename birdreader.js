@@ -28,16 +28,54 @@ app.use(express.compress());
 // server out our static directory as static files
 app.use(express.static(__dirname+'/public'));
 
-// homepage
+// page titles etc.
+var page = { title: "",
+             tagline: "RSS aggregator - a replacement for Google Reader"
+            };
+
+
+// home
 app.get('/', function(req, res) {
-  
-  // prepare the page data
-  var page = { title: "Bird Reader",
-               tagline: "RSS aggregator - a replacement for Google Reader"
-              };
+  res.statusCode = 302;
+  res.setHeader('Location', '/unread');
+  res.end('This page has moved');
+});
+
+// unread articles
+app.get('/unread', function(req, res) {
   
   // fetch the unread articles
   article.unreadArticles(function(err,data) {
+    
+    // add the articles to our data array
+    page.articles = data;
+    
+    // render the page
+    res.render('index.jade', page);
+  })
+
+});
+
+// read articles
+app.get('/read', function(req, res) {
+  
+  // fetch the unread articles
+  article.readArticles(function(err,data) {
+    
+    // add the articles to our data array
+    page.articles = data;
+    
+    // render the page
+    res.render('index.jade', page);
+  })
+
+});
+
+// starred articles
+app.get('/starred', function(req, res) {
+  
+  // fetch the unread articles
+  article.starredArticles(function(err,data) {
     
     // add the articles to our data array
     page.articles = data;

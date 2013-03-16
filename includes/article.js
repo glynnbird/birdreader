@@ -16,6 +16,38 @@ var unreadArticles = function(callback) {
   })
 }
 
+// fetch read articles from couchdb
+var readArticles = function(callback) {
+  
+  // equivalent of CouchDB https://<server>:<port>/articles/_design/matching/_view/readbyts?limit=100&reduce=false&include_docs=true&descending=true
+  articles.view('matching','readbyts', { limit: 100, reduce: false, include_docs: true, descending:true}, function(err,data) {
+    if(!err) {
+      var retval=[];
+      for(var i in data.rows) {
+        retval.push(data.rows[i].doc);
+      }
+    }
+
+    callback(err,retval);
+  })
+}
+
+// fetch starred articles from couchdb
+var starredArticles = function(callback) {
+  
+  // equivalent of CouchDB https://<server>:<port>/articles/_design/matching/_view/starredbyts?limit=100&reduce=false&include_docs=true&descending=true
+  articles.view('matching','starredbyts', { limit: 100, reduce: false, include_docs: true, descending:true}, function(err,data) {
+    if(!err) {
+      var retval=[];
+      for(var i in data.rows) {
+        retval.push(data.rows[i].doc);
+      }
+    }
+
+    callback(err,retval);
+  })
+}
+
 // mark an article as read
 var markRead = function(id, callback) {
   
@@ -67,6 +99,8 @@ var star = function(id, callback) {
 
 module.exports = {
   unreadArticles: unreadArticles,
+  readArticles: readArticles,
+  starredArticles: starredArticles,
   markRead: markRead,
   star: star
 }
