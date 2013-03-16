@@ -89,16 +89,16 @@ app.get('/starred', function(req, res) {
 // mark an article read
 app.get('/api/:id/read', function(req,res) {
   // mark the supplied article as read
-  article.markRead(req.params.id,function() { 
-      res.send({ success: true})
+  article.markRead(req.params.id,function(data) { 
+      res.send(data)
   });
 })
 
 // start an article 
 app.get('/api/:id/star', function(req,res) {
   // mark the supplied article as starred
-  article.star(req.params.id,function() { 
-      res.send({ success: true})
+  article.star(req.params.id,function(data) { 
+      res.send(data)
   });
 })
 

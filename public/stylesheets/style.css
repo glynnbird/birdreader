@@ -1,3 +1,4 @@
+
 .readerlogo {
   background: transparent url('/images/icon.png') no-repeat;
   padding-left:40px;
@@ -52,6 +53,7 @@ body {
 
 ol {
   margin:0;
+  margin-top:40px;
   list-style:none;
 }
 

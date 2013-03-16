@@ -60,10 +60,12 @@ var markRead = function(id, callback) {
       
         // write it back
         articles.insert(doc,function(err,data) {
-          callback(err?false:true);
+
         });
+        
+        callback(doc);
       } else {
-        callback(true);
+        callback(doc);
       }
     } else {
       callback(false)
@@ -84,10 +86,11 @@ var star = function(id, callback) {
 
         // write it back
         articles.insert(doc,function(err,data) {
-          callback(err?false:true);
+
         });
+        callback(doc);
       } else {
-        callback(true);
+        callback(doc);
       }
 
     } else {

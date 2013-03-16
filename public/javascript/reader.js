@@ -1,10 +1,8 @@
 var apiMarkAsRead=function(id) {
-  $.get("/api/"+id+"/read", function() {
-    console.log("request made")
-  })
-  .done(function() { console.log("success"); })
-  .fail(function() { console.log("error"); })
-  .always(function() { console.log("finished"); });
+  $.getJSON("/api/"+id+"/read", function(data) {
+     $("#description"+id).html(data.description);
+  });
+
 }
 
 var apiStar=function(id) {
