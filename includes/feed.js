@@ -4,6 +4,7 @@ var async = require('async');
 var request = require('request');
 var feedparser = require('feedparser');
 var moment = require('moment');
+var extractor = require('extractor');
 
 // read all the feeds from Cloudant
 var readAll = function(callback) {
@@ -27,8 +28,6 @@ var fetchFeed=function(feed,callback) {
   var reqObj = {'uri': feed.xmlUrl,
                 'headers': headers };
   var articles=[];
-
-  console.log("Actually Fetching feed ",feed.xmlUrl," newer than ",newerThan.format('ddd, DD MMM YYYY HH:mm:ss Z'));
 
   // parseString()
   request(reqObj, function (err, response, body){
@@ -55,13 +54,10 @@ var fetchFeed=function(feed,callback) {
         }
       })
       .on('end', function() {
-        console.log("finished: returning ",articles.length," articles")
         feed.lastModified = latest.format('YYYY-MM-DD HH:mm:ss Z');
         callback(null,articles);
       })
       .on('error', function(error) {
-//        console.log('ERROR!');
- //       callback(null,articles);
       })
   });
   
@@ -101,28 +97,88 @@ var fetchArticles = function(callback) {
          // write the articles to the database
          if(bigresults.length>0) {
            articles.bulk({"docs":bigresults},function(err,d) {
-             console.log("Written ",bigresults.length," articles");
+//             console.log("Written ",bigresults.length," articles");
            })           
          }
 
          // rewrite the feeds to the database
          feeds.bulk({"docs":allFeeds},function(err,d) {
-           console.log("Written ",allFeeds.length," feeds");
+//           console.log("Written ",allFeeds.length," feeds");
          })        
-         console.log("********");
-         console.log(bigresults);
-         console.log("*******");
        } 
        
        callback(err,results);
-       
 
     },25);
 
   });
 }
 
+// add a feed for this url
+var add = function(url,callback) {
+  
+  selector = {
+      'title':'title',
+      'links': 'link',
+      'metadescription': 'meta[name=description]'  
+      };
+
+
+  extractor.scrape(url, selector, function (err, data, env) {
+      if (err)  {
+        var retval = { success: false, message: "Could not fetch"+url};
+        return callback(false,retval);
+      }
+
+      var feed={};
+      feed.text=data.title[0].text;
+      feed.title=data.title[0].text;
+      feed.type=null;
+      feed.description=data.metadescription;
+      feed.xmlUrl=null;
+      feed.htmlUrl=url;
+      feed.tags=[];
+      feed.lastModified=moment().format('YYYY-MM-DD HH:mm:ss Z');
+      
+      // look for matching link tags
+      for(var i in data.links) {
+        if(typeof data.links[i].type != "undefined") {
+          if(data.links[i].type=="application/rss+xml") {
+            feed.xmlUrl = data.links[i].href;
+            feed.type='rss';
+            break;
+          }
+          if(data.links[i].type=="application/atom+xml") {
+            feed.xmlUrl = data.links[i].href;
+            feed.type='rss';
+            break;
+          }
+          if(data.links[i].type=="application/rdf+xml") {
+            feed.xmlUrl = data.links[i].href;
+            feed.type='rss';
+            break;
+          }
+        }
+      }
+      
+      // if we have found a feed
+      if(feed.xmlUrl) {
+        // add it to the database
+        feeds.insert(feed,function(err,data) {
+//          console.log(err,data);          
+        })
+        var retval = { success: true, message: "Added feed for "+url};
+        callback(true,retval);
+      } else {
+        var retval = { success: false, message: "Could not add feed for "+url};
+        callback(false,retval);
+      }
+  });
+
+}
+
 module.exports = {
   readAll: readAll,
-  fetchArticles: fetchArticles
+  fetchArticles: fetchArticles,
+  add: add
 }

@@ -1,0 +1,22 @@
+!!! 5
+html(lang='en')  
+  include includes/header
+  body 
+
+    include includes/topbar                                             
+    
+    div.container
+
+      h1 Add a feed
+      
+      div#addfeedback
+      
+      form(onsubmit='return addFeed()')
+        label(for='url') URL
+        input(id='url',type='text',name='url')
+        div.spacer
+        input(type='submit',value='Add')
+
+
+ 
+    include includes/footer

@@ -7,13 +7,13 @@ var apiMarkAsRead=function(id) {
 
 var apiStar=function(id) {
   $.getJSON("/api/"+id+"/star", function(data) {
-    console.log("request made")
+    
   })
 }
 
 var apiUnstar=function(id) {
   $.getJSON("/api/"+id+"/unstar", function() {
-    console.log("request made")
+    
   })
 }
 
@@ -28,7 +28,6 @@ var unstarArticle = function(id) {
 }
 
 var readArticle = function(id) {
-  console.log("readArticle",id)
   $('#body'+id).show();
   $('#hide'+id).show();
   $('#expand'+id).hide();
@@ -36,19 +35,24 @@ var readArticle = function(id) {
 }
 
 var hideArticle = function(id) {
-  console.log("hide",id)
   $('#body'+id).hide();
   $('#hide'+id).hide();
   $('#expand'+id).show();
 }
 
 var removeArticle = function(id) {
-  console.log("removeArticle",id);
   $('#'+id).hide();
   apiMarkAsRead(id);
 }
 
 var readAll = function() {
-  console.log("readAll")
   $('.showable').show(1);
+}
+
+var addFeed = function() {
+  var data = {url : $('#url').val()}
+  $.getJSON("/api/feed/add", data,  function(retval) {
+    $('#addfeedback').html("<div class='well'>"+retval.message+"</div>");
+  })
+  return false;
 }

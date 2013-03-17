@@ -87,3 +87,7 @@ li {
 .expand a:link, .expand a:visited {
   color: #999;
 } 
+
+h1 {
+  margin-top:60px;
+}

@@ -113,6 +113,25 @@ app.get('/api/:id/unstar', function(req,res) {
   });
 })
 
+// add a new feed
+app.get('/api/feed/add', function(req,res) {
+  // Add the new feed to the database
+  feed.add(req.query.url,function(err,data){
+    res.send(data);
+  })
+})
+
+// unread articles
+app.get('/add', function(req, res) {
+
+  // page parameters
+  page.title='Add';
+  
+  // render the page
+  res.render('addform.jade', page);
+
+});
+
 // listen on port 3000
 app.listen(3000);
 console.log('Listening on port 3000');
