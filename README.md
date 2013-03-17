@@ -12,6 +12,8 @@ BirdReader is designed to be installed on your own webserver or laptop, running 
 * on a cloud server e.g. AWS Micro server (free!)
 * on a [Raspberry Pi](http://www.raspberrypi.org/)
 
+![desktop screenshot](https://github.com/glynnbird/birdreader/raw/master/public/images/desktop.png "Desktop screenshot")
+
 ## Features
 
 * import your old Google Reader subscriptions 
@@ -111,6 +113,9 @@ library to pull back the page, find the title, meta description and link tags an
 ## What does it look like?
 
 The site is built with [Bootstrap](http://twitter.github.com/bootstrap/) so that it provides a decent interface on desktop and mobile browsers
+
+
+### Mobile Screenshot
 
 ![mobile screenshot](https://github.com/glynnbird/birdreader/raw/master/public/images/mobile.png "Mobile screenshot")
 
