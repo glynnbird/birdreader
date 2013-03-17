@@ -9,7 +9,7 @@ in its unpolished "alpha".
 BirdReader is designed to be installed on your own webserver or laptop, running Node.js. e.g.
 
 * on an old PC
-* on a cloud server e.g. AWS
+* on a cloud server e.g. AWS Micro server (free!)
 * on a [Raspberry Pi](http://www.raspberrypi.org/)
 
 ## Features
@@ -17,11 +17,12 @@ BirdReader is designed to be installed on your own webserver or laptop, running 
 * import your old Google Reader subscriptions 
 * fetches RSS every 15 minutes
 * web-based aggregated newsfeed
-** mark articles as read
-** delete articles without reading
-** 'star' articles
-** sorted in newest-first order
-** bootstrap-based, responsive layout
+* - mark articles as read
+* - delete articles without reading
+* - 'star' articles
+* - add a new feed
+* - sorted in newest-first order
+* - bootstrap-based, responsive layout
 
 ## How does it work?
 
@@ -93,6 +94,11 @@ This allows us to query our data in three ways: unread articles, read articles o
 Every so often, BirdReader fetches all the feeds using the [feedparser](https://npmjs.org/package/feedparser). Any articles newer than
 the feed's previous newest article is saved to the articles database.
 
+### Adding new feeds
+
+New feeds can be added by filling in a web form with the url of the page that has an RSS link tag. We use the [extractor](https://npmjs.org/package/extractor)
+library to pull back the page, find the title, meta description and link tags and add the data to our feeds database.
+
 ## What does it look like?
 
 The site is built with [Bootstrap](http://twitter.github.com/bootstrap/) so that it provides a decent interface on desktop and mobile browsers
@@ -108,6 +114,7 @@ The site is built with [Bootstrap](http://twitter.github.com/bootstrap/) so that
 * [async](https://npmjs.org/package/async) - Control your parallelism in Node.js
 * [Bootstrap](http://twitter.github.com/bootstrap/) - Twitter responsive HTML framework
 * [sax](https://npmjs.org/package/sax) - XML parser for Node.js
+* [extractor](https://npmjs.org/package/extractor) - HTML scraper, to find RSS links in HTML pages
 
 ## Installation
 
