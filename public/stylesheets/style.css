@@ -74,6 +74,13 @@ li {
   border-bottom: 1px solid #e8e8e8;
 }
 
+.feed {
+  position: relative;
+  min-height: 51px;
+  padding: 9px 12px;
+  border-bottom: 1px solid #e8e8e8;
+}
+
 .feedName {
   font-weight: bold;
   color: #333;

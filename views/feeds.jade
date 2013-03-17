@@ -18,11 +18,11 @@ html(lang='en')
       ol
         each feed in feeds
           li(id=feed._id)
-            div.tweet
+            div.feed
               a.feedName(href="/feed/"+feed._id) @#{feed.title}
-                span.tags
-                  each tag in feed.tags  
-                    span.label.mr10= tag
+              div.tags
+                each tag in feed.tags  
+                  span.label.mr10= tag
 
  
     include includes/footer
