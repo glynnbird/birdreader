@@ -177,8 +177,45 @@ var add = function(url,callback) {
 
 }
 
+// fetch a single feed
+var get=function(id,callback) {
+  feeds.get(id,callback);
+}
+
+// add a tag to an existing feed
+var addTag = function(id,tag,callback) {
+  feeds.get(id,function(err,data) {
+    if(!err) {
+      data.tags.push(tag);
+      feeds.insert(data,function(err,data) {
+        callback(true,data);
+      });
+    }
+  })
+}
+
+// remove a tag to an existing feed
+var removeTag = function(id,tag,callback) {
+  feeds.get(id,function(err,data) {
+    if(!err) {
+      for(var i in data.tags) {
+        if(data.tags[i] == tag) {
+          data.tags.splice(i,1);
+        }
+      }
+      feeds.insert(data,function(err,data) {
+        callback(true,data);
+      });
+    }
+  })
+}
+
+
 module.exports = {
   readAll: readAll,
   fetchArticles: fetchArticles,
-  add: add
+  add: add,
+  get: get,
+  addTag: addTag,
+  removeTag: removeTag
 }

@@ -1,0 +1,41 @@
+!!! 5
+html(lang='en')  
+  include includes/header
+  body 
+
+    include includes/topbar                                             
+    
+    div.container
+
+      div.hero-unit
+        h1 #{title}
+        p 
+        p @#{feed.title}
+        p 
+        div.spacer
+      
+      h3 Type
+      div #{feed.type}
+      
+      h3 Web URL
+      div #{feed.htmlUrl}
+      
+      h3 Feed URL
+      div #{feed.xmlUrl}
+      
+      h3 Last Article
+      div #{feed.lastModified}
+      
+      h3 Tags
+      div.tags
+        each tag in feed.tags  
+          a.btn.btn-large.mr10(href="Javascript:removeTag('"+id+"','"+tag+"')")
+            i.icon-remove
+            span &nbsp; #{tag}
+    
+      h3 Add Tag
+        form(id="addtag",method="get",onsubmit="return addTag('"+id+"')")
+          input(id="tagName",name="tag")
+          input(type="submit",value="Add Tag")    
+ 
+    include includes/footer

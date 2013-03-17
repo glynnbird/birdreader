@@ -56,3 +56,20 @@ var addFeed = function() {
   })
   return false;
 }
+
+var addTag = function(feedid) {
+
+  var data = {tag : $('#tagName').val()}
+  $.getJSON("/api/feed/"+feedid+"/tag/add", data,  function(retval) {
+    location.reload();
+  })
+  return false;
+}
+
+var removeTag = function(feedid, tag) {
+  var data = {tag : tag}
+  $.getJSON("/api/feed/"+feedid+"/tag/remove", data,  function(retval) {
+    location.reload();
+  })
+  return false;
+}

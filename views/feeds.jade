@@ -1,0 +1,27 @@
+!!! 5
+html(lang='en')  
+  include includes/header
+  body 
+
+    include includes/topbar                                             
+    
+    div.container
+
+      div.hero-unit
+        h1 #{title}
+        p 
+        p #{feeds.length} feeds
+        p 
+        div.spacer
+      
+      ol
+        each feed in feeds
+          li(id=feed._id)
+            div.tweet
+              a.feedName(href="/feed/"+feed._id) @#{feed.title}
+                span.tags
+                  each tag in feed.tags  
+                    span.label.mr10= tag
+
+ 
+    include includes/footer

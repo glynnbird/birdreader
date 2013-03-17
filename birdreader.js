@@ -112,7 +112,7 @@ app.get('/api/:id/unstar', function(req,res) {
   });
 })
 
-// add a new feed
+// add a new feed api call, expects 'url' get parameter
 app.get('/api/feed/add', function(req,res) {
   
   // Add the new feed to the database
@@ -121,7 +121,7 @@ app.get('/api/feed/add', function(req,res) {
   })
 })
 
-// unread articles
+// add form articles
 app.get('/add', function(req, res) {
   
   // fetch the article stats
@@ -131,6 +131,55 @@ app.get('/add', function(req, res) {
     res.render('addform.jade', {title: 'Add', stats: stats});
   });
 
+});
+
+// feeds list
+app.get('/feeds', function(req, res) {
+  
+  // fetch the article stats
+  article.stats(function(err,stats) {
+    // fetch the article stats
+    feed.readAll(function(feeds) {
+    
+      // render the page
+      res.render('feeds.jade', {title: 'Feeds', feeds: feeds, stats: stats});
+    });
+  });
+
+});
+
+// individual feed
+app.get('/feed/:id', function(req, res) {
+  
+  // fetch the article stats
+  article.stats(function(err,stats) {
+    
+    // fetch the feed
+    feed.get(req.params.id, function(err, data) {
+
+      // render the page
+      res.render('feed.jade', {title: 'Feed', feed: data, stats: stats, id: req.params.id});
+    });
+  });
+
+});
+
+// add a tag to a feed
+app.get('/api/feed/:id/tag/add', function(req, res) {
+  
+  feed.addTag(req.params.id,req.query.tag,function(err,data) {
+    res.send({ success: !err, data: data});
+  })
+  
+});
+
+// remove a tag from a feed
+app.get('/api/feed/:id/tag/remove', function(req, res) {
+  
+  feed.removeTag(req.params.id,req.query.tag,function(err,data) {
+    res.send({ success: !err, data: data});
+  })
+  
 });
 
 // listen on port 3000
