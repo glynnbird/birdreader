@@ -49,6 +49,10 @@ body {
   margin-right:10px;
 }
 
+.mr40 {
+  margin-right:40px;
+}
+
 .line {
   margin-bottom:10px;
   border-top:1px solid #888;

@@ -23,6 +23,7 @@ BirdReader is designed to be installed on your own webserver or laptop, running 
 * - add a new feed
 * - sorted in newest-first order
 * - bootstrap-based, responsive layout
+* - tagging/untagging of feeds
 
 ## How does it work?
 
