@@ -38,4 +38,11 @@ html(lang='en')
           input(id="tagName",name="tag")
           input(type="submit",value="Add Tag")    
  
+      h3 Remove Feed
+      a.btn.btn-large.btn-danger(href="Javascript:removeFeed('"+id+"')")
+        i.icon-remove
+        span &nbsp; REMOVE
+        
+      div.mb20
+
     include includes/footer

@@ -73,3 +73,10 @@ var removeTag = function(feedid, tag) {
   })
   return false;
 }
+
+var removeFeed = function(feedid) {
+  $.getJSON("/api/feed/"+feedid+"/remove",  function(retval) {
+    location.href="/feeds";
+  })
+  return false;
+}

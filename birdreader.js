@@ -182,6 +182,15 @@ app.get('/api/feed/:id/tag/remove', function(req, res) {
   
 });
 
+// remove a feed
+app.get('/api/feed/:id/remove', function(req, res) {
+  
+  feed.remove(req.params.id,function(err,data) {
+    res.send({ success: !err, data: data});
+  })
+  
+});
+
 // listen on port 3000
 app.listen(3000);
 console.log('Listening on port 3000');

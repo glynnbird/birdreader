@@ -210,6 +210,16 @@ var removeTag = function(id,tag,callback) {
   })
 }
 
+// remove a feed
+var remove = function(id,callback) {
+  feeds.get(id,function(err,data) {
+    if(!err) {
+      feeds.destroy(id,data._rev,function(err,data) {
+        callback(true,data);
+      });
+    }
+  })
+}
 
 module.exports = {
   readAll: readAll,
@@ -217,5 +227,6 @@ module.exports = {
   add: add,
   get: get,
   addTag: addTag,
-  removeTag: removeTag
+  removeTag: removeTag,
+  remove: remove
 }
