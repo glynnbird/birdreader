@@ -184,6 +184,7 @@ var get=function(id,callback) {
 
 // add a tag to an existing feed
 var addTag = function(id,tag,callback) {
+  tag = tag.replace(/^ +/,"").replace(/ +$/,"");
   feeds.get(id,function(err,data) {
     if(!err) {
       data.tags.push(tag);
