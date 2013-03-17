@@ -28,12 +28,6 @@ app.use(express.compress());
 // server out our static directory as static files
 app.use(express.static(__dirname+'/public'));
 
-// page titles etc.
-var page = { title: "",
-             tagline: "RSS aggregator - a replacement for Google Reader"
-            };
-
-
 // home
 app.get('/', function(req, res) {
   res.statusCode = 302;
@@ -44,53 +38,56 @@ app.get('/', function(req, res) {
 // unread articles
 app.get('/unread', function(req, res) {
   
-  // fetch the unread articles
-  article.unreadArticles(function(err,data) {
+  // fetch the article stats
+  article.stats(function(err,stats) {
     
-    // add the articles to our data array
-    page.title='Unread';
-    page.articles = data;
-    
-    // render the page
-    res.render('index.jade', page);
+    // fetch the unread articles
+    article.unreadArticles(function(err,data) {
+
+      // render the page
+      res.render('index.jade', { title: "Unread", stats:stats, articles: data } );
+    })
   })
+
 
 });
 
 // read articles
 app.get('/read', function(req, res) {
   
-  // fetch the unread articles
-  article.readArticles(function(err,data) {
+  // fetch the article stats
+  article.stats(function(err,stats) {
     
-    // add the articles to our data array
-    page.title='Read';
-    page.articles = data;
-    
-    // render the page
-    res.render('index.jade', page);
-  })
+    // fetch the unread articles
+    article.readArticles(function(err,data) {
+
+      // render the page
+      res.render('index.jade', {title:'Read', stats:stats, articles: data} );
+    })
+  });
 
 });
 
 // starred articles
 app.get('/starred', function(req, res) {
   
-  // fetch the unread articles
-  article.starredArticles(function(err,data) {
+  // fetch the article stats
+  article.stats(function(err,stats) {
     
-    // add the articles to our data array
-    page.title='Starred';
-    page.articles = data;
+    // fetch the unread articles
+    article.starredArticles(function(err,data) {
     
-    // render the page
-    res.render('index.jade', page);
-  })
+      // render the page
+      res.render('index.jade', {title: 'Starred', stats:stats, articles: data} );
+    });
+    
+  });
 
 });
 
 // mark an article read
 app.get('/api/:id/read', function(req,res) {
+  
   // mark the supplied article as read
   article.markRead(req.params.id,function(data) { 
       res.send(data)
@@ -99,6 +96,7 @@ app.get('/api/:id/read', function(req,res) {
 
 // star an article 
 app.get('/api/:id/star', function(req,res) {
+  
   // mark the supplied article as starred
   article.star(req.params.id,function(data) { 
       res.send(data)
@@ -107,6 +105,7 @@ app.get('/api/:id/star', function(req,res) {
 
 // unstar an article 
 app.get('/api/:id/unstar', function(req,res) {
+  
   // mark the supplied article as un-starred
   article.unstar(req.params.id,function(data) { 
       res.send(data)
@@ -115,6 +114,7 @@ app.get('/api/:id/unstar', function(req,res) {
 
 // add a new feed
 app.get('/api/feed/add', function(req,res) {
+  
   // Add the new feed to the database
   feed.add(req.query.url,function(err,data){
     res.send(data);
@@ -123,12 +123,13 @@ app.get('/api/feed/add', function(req,res) {
 
 // unread articles
 app.get('/add', function(req, res) {
-
-  // page parameters
-  page.title='Add';
   
-  // render the page
-  res.render('addform.jade', page);
+  // fetch the article stats
+  article.stats(function(err,stats) {
+    
+    // render the page
+    res.render('addform.jade', {title: 'Add', stats: stats});
+  });
 
 });
 

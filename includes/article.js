@@ -3,8 +3,9 @@ var articles = require('./cloudant.js').articles;
 // fetch unread articles from couchdb
 var unreadArticles = function(callback) {
   
-  // equivalent of CouchDB https://<server>:<port>/articles/_design/matching/_view/unreadbyts?limit=100&reduce=false&include_docs=true&descending=true
-  articles.view('matching','unreadbyts', { limit: 100, reduce: false, include_docs: true, descending:true}, function(err,data) {
+  // equivalent of CouchDB https://<server>:<port>/articles/_design/matching/_view/byts?limit=100&reduce=false&include_docs=true&descending=true&startkey=["unreadz"]&endkey=["unread"]
+  // N.B. when doing doing descending=true with startkey/endkey, you must also swap startkey/endkey(!)
+  articles.view('matching','byts', { limit: 100, reduce: false, include_docs: true, descending:true, startkey:["unread"+"z"],endkey: ["unread"]}, function(err,data) {
     if(!err) {
       var retval=[];
       for(var i in data.rows) {
@@ -19,8 +20,9 @@ var unreadArticles = function(callback) {
 // fetch read articles from couchdb
 var readArticles = function(callback) {
   
-  // equivalent of CouchDB https://<server>:<port>/articles/_design/matching/_view/readbyts?limit=100&reduce=false&include_docs=true&descending=true
-  articles.view('matching','readbyts', { limit: 100, reduce: false, include_docs: true, descending:true}, function(err,data) {
+  // equivalent of CouchDB https://<server>:<port>/articles/_design/matching/_view/byts?limit=100&reduce=false&include_docs=true&descending=true&startkey=["readz"]&endkey=["read"]
+  // N.B. when doing doing descending=true with startkey/endkey, you must also swap startkey/endkey(!)
+  articles.view('matching','byts', { limit: 100, reduce: false, include_docs: true, descending:true,  startkey:["read"+"z"],endkey: ["read"]}, function(err,data) {
     if(!err) {
       var retval=[];
       for(var i in data.rows) {
@@ -35,8 +37,9 @@ var readArticles = function(callback) {
 // fetch starred articles from couchdb
 var starredArticles = function(callback) {
   
-  // equivalent of CouchDB https://<server>:<port>/articles/_design/matching/_view/starredbyts?limit=100&reduce=false&include_docs=true&descending=true
-  articles.view('matching','starredbyts', { limit: 100, reduce: false, include_docs: true, descending:true}, function(err,data) {
+  // equivalent of CouchDB https://<server>:<port>/articles/_design/matching/_view/byts?limit=100&reduce=false&include_docs=true&descending=true&startkey=["starredz"]&endkey=["starred"]
+  // N.B. when doing doing descending=true with startkey/endkey, you must also swap startkey/endkey(!)
+  articles.view('matching','byts', { limit: 100, reduce: false, include_docs: true, descending:true, startkey:["starred"+"z"],endkey: ["starred"]}, function(err,data) {
     if(!err) {
       var retval=[];
       for(var i in data.rows) {
@@ -44,6 +47,20 @@ var starredArticles = function(callback) {
       }
     }
 
+    callback(err,retval);
+  })
+}
+
+// get counts of read/unread/starred articles
+var stats = function(callback) {
+  // equivalent of CouchDB https://<server>:<port>/articles/_design/matching/_view/byts?group_level=1
+  articles.view('matching','byts', { group_level: 1}, function(err,data) {
+    var retval={}
+    if(!err) {
+      for(var i in data.rows) {
+        retval[data.rows[i].key[0]] = data.rows[i].value;
+      }
+    }
     callback(err,retval);
   })
 }
@@ -132,5 +149,6 @@ module.exports = {
   starredArticles: starredArticles,
   markRead: markRead,
   star: star,
-  unstar: unstar
+  unstar: unstar,
+  stats: stats
 }

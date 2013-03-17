@@ -81,13 +81,21 @@ article has been consumed or favourited.
 
 ### Views
 
-Cloudant/CouchDB only allows data to be retrieved by its "_id" unless you define a "view". We have three views on the articles database:
+Cloudant/CouchDB only allows data to be retrieved by its "_id" unless you define a "view". We have one view on the articles database called "byts"
+that allows us to query our data: 
 
-* unreadbyts - unread articles in timestamp order
-* readbyts - read articles in timestamp order
-* starredbyts - starred articles in timestamp order
+* unread article, sorted by timestamp
+* read articles, sorted by timestamp
+* starred articles, sorted by timestamp
+* counts of the number of read/unread/starred articles 
 
-This allows us to query our data in three ways: unread articles, read articles or starred articles.
+The view creates a "map" function which emits keys like
+
+```
+  ["string",123455]
+```
+
+where "string" can be "unread", "read" or "starred", and "12345" is the timestamp of the article.
 
 ### Scraping articles
 

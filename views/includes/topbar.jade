@@ -10,10 +10,13 @@ div.navbar.navbar-inverse.navbar-fixed-top
         ul.nav
           li
             a(href="/unread") Unread
+              span.label.label-success.ml5 #{stats.unread}
           li
             a(href="/read") Read
+              span.label.ml5 #{stats.read}
           li
             a(href="/starred") Starred
+              span.label.label-warning.ml5 #{stats.starred}
           li
             a(href="/add") Add
 

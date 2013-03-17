@@ -15,6 +15,7 @@
     
   });
   nano.db.create('articles',function(err,body) {
+    
     // if this worked, then we need to create views too
     if(!err) {
       
@@ -23,17 +24,9 @@
            "_id": "_design/matching",
            "language": "javascript",
            "views": {
-    					 "unreadbyts": {
-    							 "map": "function(doc) { if(!doc.read) { emit(doc.pubDateTS, null);} }",
-    							 "reduce": "_count"
-    					 },
-    					 "readbyts": {
-    							 "map": "function(doc) { if(doc.read) { emit(doc.pubDateTS, null);} }",
-    							 "reduce": "_count"
-    					 },
-    					 "starredbyts": {
-    							 "map": "function(doc) { if(doc.starred) { emit(doc.pubDateTS, null);} }",
-    							 "reduce": "_count"
+    					 "byts":  {
+    					   "map": "function(doc) { if(doc.starred) {emit(['starred',doc.pubDateTS],null);} if(doc.read) {emit(['read',doc.pubDateTS],null);} if(!doc.read) {emit(['unread',doc.pubDateTS],null);} }",
+    					   "reduce": "_count"
     					 }
            }
         }	
