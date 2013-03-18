@@ -31,11 +31,13 @@ html(lang='en')
               div.showable.pb20(id="body"+article._id)
                 a.btn.btn-success.mr10(href=article.link,target='_blank') Go
                 - if (article.starred)
-                  a.btn-warning.btn(id="star"+article._id,href="Javascript:unstarArticle('"+article._id+"')")
+                  a.btn-warning.btn.mr10(id="star"+article._id,href="Javascript:unstarArticle('"+article._id+"')")
                     i.icon-star
                 - else
-                  a.btn(id="star"+article._id,href="Javascript:starArticle('"+article._id+"')")
-                    i.icon-star                 
+                  a.btn.mr10(id="star"+article._id,href="Javascript:starArticle('"+article._id+"')")
+                    i.icon-star
+                a.btn.mr10(href="http://twitter.com/share?url="+article.link,target="_new",rel="nofollow") Twitter
+                a.btn.mr10(href="http://www.facebook.com/sharer.php?u="+article.link,target="_new",rel="nofollow") Facebook
                 div.mb10
                 div(id="description"+article._id) 
                 div.mb10
