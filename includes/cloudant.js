@@ -40,7 +40,7 @@
          "language": "javascript",
          "views": {
   					 "byts":  {
-  					   "map": "function(doc) {if(doc.starred) {emit(['starred',doc.pubDateTS],null);} if(doc.read) {emit(['read',doc.pubDateTS],null);} if(!doc.read) {emit(['unread',doc.pubDateTS],null);} }",
+  					   "map": "function(doc) { if(doc.starred) {emit(['starred',doc.pubDateTS],null);} if(doc.read) {emit(['read',doc.pubDateTS],null);} if(!doc.read) {emit(['unread',doc.pubDateTS],null);} }",
   					   "reduce": "_count"
   					 }
          }
@@ -51,17 +51,22 @@
     for(var i in views) {
       var v = views[i];
       articles.get(v._id,function(err,data) {
-        if(!err) {
+        if(!data) {
+          data= {};
+          var rev=null;
+        } else {
           var rev = data._rev;
           delete data._rev;
-          if(JSON.stringify(data) != JSON.stringify(v)) {
-            console.log("view different!");
-            v._rev=rev
-            articles.insert(v,function(err,data) {
-              console.log(err,data);
-            });
-          }
         }
+
+        if(JSON.stringify(data) != JSON.stringify(v)) {
+          if(rev) {
+            v._rev=rev
+          }
+          articles.insert(v,function(err,data) {
+          });
+        }
+        
       })
     }
     callback();
