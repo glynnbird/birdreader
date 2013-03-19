@@ -5,5 +5,10 @@
      "username": "<YOUR_USER_NAME>",
      "password": "<YOUR_PASSWORD>",
      "secure": true
+  },
+  "authentication": {
+   "on": false,
+   "username": "<your BirdReader username>",
+   "password": "<your BirdReader password>"
   }
 }

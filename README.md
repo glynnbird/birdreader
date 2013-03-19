@@ -27,6 +27,7 @@ BirdReader is designed to be installed on your own webserver or laptop, running 
 * - bootstrap-based, responsive layout
 * - tagging/untagging of feeds
 * - Twitter/Facebook sharing
+* - basic HTTP authentication (optional)
 
 ## How does it work?
 
@@ -172,6 +173,25 @@ You can import this into BirdReader with
 ```
   node import_opml.js subscriptions.xml
 ```
+
+## Securing your BirdReader server
+
+BirdReader allows you to protect your webserver by username and password by adding an "authentication" section to our includes/config.json:
+
+```
+  "cloudant": {
+    .  
+    .
+  },
+  "authentication": {
+    "on": true,
+    "username": "myusername",
+    "password": "mypassword"
+  }
+}
+```
+
+Authentication will only be enforced if "authentication.on" is set to "true". A restart of BirdReader is required to pick up the config.
 
 
 

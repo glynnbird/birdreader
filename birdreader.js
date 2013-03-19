@@ -1,3 +1,5 @@
+// load the config
+var config = require("./includes/config.js").get;
 
 // we need access to the articles  and feeds databases on Cloudant
 var article = require('./includes/article.js');
@@ -6,6 +8,12 @@ var feed = require('./includes/feed.js');
 // we need the express framework
 var express = require('express');
 var app = express();
+
+// Authenticator
+if(config.authentication && config.authentication.on) {
+  app.use(express.basicAuth( config.authentication.username, config.authentication.password));
+}
+
 
 // need "node-schedule" to fetch feeds every so oftern
 var schedule = require('node-schedule');
