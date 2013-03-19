@@ -1,3 +1,5 @@
 .DS_Store
 node_modules
 includes/config.json
+includes/config_cloudant.json
+includes/config_local.json
