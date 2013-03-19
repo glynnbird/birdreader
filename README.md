@@ -133,13 +133,15 @@ The site is built with [Bootstrap](http://twitter.github.com/bootstrap/) so that
 
 ## Installation
 
-You will need Node.js and npm installed on your computer (version 0.8.x or version 0.10.x). Unpack the BirdReader repository and install its dependencies e.g.
+You will need Node.js and npm installed on your computer (version 0.8.x or version 0.10.x). Unpack the BirdReader repository and i
+nstall its dependencies e.g.
 
 ```
   git clone git@github.com:glynnbird/birdreader.git
   cd birdreader
   npm install
 ```
+N.B on Mac, your're likely to need [https://developer.apple.com/xcode/](development tools) installed.
 
 Copy the sample configuration into place
 ```
