@@ -9,6 +9,9 @@ var feed = require('./includes/feed.js');
 var express = require('express');
 var app = express();
 
+// async library
+var async = require('async');
+
 // Authenticator
 if(config.authentication && config.authentication.on) {
   app.use(express.basicAuth( config.authentication.username, config.authentication.password));
@@ -46,32 +49,31 @@ app.get('/', function(req, res) {
 // unread articles
 app.get('/unread', function(req, res) {
   
-  // fetch the article stats
-  article.stats(function(err,stats) {
-    
-    // fetch the unread articles
-    article.unreadArticles(function(err,data) {
-
-      // render the page
-      res.render('index.jade', { title: "Unread", stats:stats, articles: data } );
-    })
-  })
-
+  async.parallel([
+    function(callback) {
+      article.stats(callback);
+    },
+    function(callback) {
+      article.unreadArticles(callback);
+    }
+  ], function(err,results) {
+    res.render('index.jade', { title: "Unread", stats:results[0], articles: results[1] } );
+  });
 
 });
 
 // read articles
 app.get('/read', function(req, res) {
   
-  // fetch the article stats
-  article.stats(function(err,stats) {
-    
-    // fetch the unread articles
-    article.readArticles(function(err,data) {
-
-      // render the page
-      res.render('index.jade', {title:'Read', stats:stats, articles: data} );
-    })
+  async.parallel([
+    function(callback) {
+      article.stats(callback);
+    },
+    function(callback) {
+      article.readArticles(callback);
+    }
+  ], function(err,results) {
+      res.render('index.jade', {title:'Read', stats:results[0], articles: results[1]} );
   });
 
 });
@@ -79,16 +81,15 @@ app.get('/read', function(req, res) {
 // starred articles
 app.get('/starred', function(req, res) {
   
-  // fetch the article stats
-  article.stats(function(err,stats) {
-    
-    // fetch the unread articles
-    article.starredArticles(function(err,data) {
-    
-      // render the page
-      res.render('index.jade', {title: 'Starred', stats:stats, articles: data} );
-    });
-    
+  async.parallel([
+    function(callback) {
+      article.stats(callback);
+    },
+    function(callback) {
+      article.starredArticles(callback);
+    }
+  ], function(err,results) {
+      res.render('index.jade', {title: 'Starred', stats:results[0], articles: results[1]} );
   });
 
 });
@@ -159,15 +160,15 @@ app.get('/feeds', function(req, res) {
 // individual feed
 app.get('/feed/:id', function(req, res) {
   
-  // fetch the article stats
-  article.stats(function(err,stats) {
-    
-    // fetch the feed
-    feed.get(req.params.id, function(err, data) {
-
-      // render the page
-      res.render('feed.jade', {title: 'Feed', feed: data, stats: stats, id: req.params.id});
-    });
+  async.parallel([
+    function(callback) {
+      article.stats(callback);
+    },
+    function(callback) {
+      feed.get(req.params.id, callback);
+    }
+  ], function(err,results) {
+      res.render('feed.jade', {title: 'Feed', feed: results[1], stats: results[0], id: req.params.id});
   });
 
 });
