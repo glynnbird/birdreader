@@ -10,39 +10,68 @@
   var feeds = nano.db.use('feeds');
   var articles = nano.db.use('articles');
   
-  // create some databases
-  nano.db.create('feeds',function(err,body) {
-    
-  });
-  nano.db.create('articles',function(err,body) {
-    
-    // if this worked, then we need to create views too
-    if(!err) {
-      
-      var views =  [
-    		 {
-           "_id": "_design/matching",
-           "language": "javascript",
-           "views": {
-    					 "byts":  {
-    					   "map": "function(doc) { if(doc.starred) {emit(['starred',doc.pubDateTS],null);} if(doc.read) {emit(['read',doc.pubDateTS],null);} if(!doc.read) {emit(['unread',doc.pubDateTS],null);} }",
-    					   "reduce": "_count"
-    					 }
-           }
-        }	
-    	];	
-      
-      console.log("Creating views - first time only");
-      for(var i in views) {
-        articles.insert(views[i],function(err,data) {
-          //console.log(err,data);
-        });
-      }
-    }
-  });
+  // async library
+  var async = require('async');
   
+  // create the feeds database
+  var createFeeds = function(callback) {
+    console.log("Checking feeds database");
+    // create some databases
+    nano.db.create('feeds',function(err,body) {
+      callback()
+    });
+  }
+  
+  // create the articles database
+  var createArticles = function(callback) {
+    console.log("Checking articles database");
+    // create some databases
+    nano.db.create('articles',function(err,body) {
+      callback()
+    });
+  }
+  
+  // create any required views
+  var createViews = function(callback) {
+    
+    var views =  [
+  		 {
+         "_id": "_design/matching",
+         "language": "javascript",
+         "views": {
+  					 "byts":  {
+  					   "map": "function(doc) {if(doc.starred) {emit(['starred',doc.pubDateTS],null);} if(doc.read) {emit(['read',doc.pubDateTS],null);} if(!doc.read) {emit(['unread',doc.pubDateTS],null);} }",
+  					   "reduce": "_count"
+  					 }
+         }
+      }	
+  	];	
+    
+    console.log("Checking views");
+    for(var i in views) {
+      var v = views[i];
+      articles.get(v._id,function(err,data) {
+        if(!err) {
+          var rev = data._rev;
+          delete data._rev;
+          if(JSON.stringify(data) != JSON.stringify(v)) {
+            console.log("view different!");
+            v._rev=rev
+            articles.insert(v,function(err,data) {
+              console.log(err,data);
+            });
+          }
+        }
+      })
+    }
+    callback();
+  }
+  
+  // create some databases
+  async.series( [ createFeeds, createArticles, createViews] );
 
   module.exports = {
     feeds: feeds,
-    articles: articles
+    articles: articles,
+    createViews: createViews
   }
