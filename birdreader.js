@@ -165,7 +165,9 @@ app.get('/feed/:id', function(req, res) {
       article.stats(callback);
     },
     function(callback) {
-      feed.get(req.params.id, callback);
+      feed.get(req.params.id, function(err,data) {
+        callback(err,data);
+      });
     }
   ], function(err,results) {
       res.render('feed.jade', {title: 'Feed', feed: results[1], stats: results[0], id: req.params.id});
