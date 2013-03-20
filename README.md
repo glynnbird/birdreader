@@ -193,7 +193,9 @@ BirdReader allows you to protect your webserver by username and password by addi
 
 Authentication will only be enforced if "authentication.on" is set to "true". A restart of BirdReader is required to pick up the config.
 
+## Benchmarks
 
+BirdReader has been tested on a Mac, Amazon EC2 and Raspberry Pi. [Benchmarks here](https://github.com/glynnbird/birdreader/blob/master/BENCHMARK.md).
 
 
 
