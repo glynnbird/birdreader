@@ -28,6 +28,7 @@ BirdReader is designed to be installed on your own webserver or laptop, running 
 * - tagging/untagging of feeds
 * - Twitter/Facebook sharing
 * - basic HTTP authentication (optional)
+* - filter read/unread/starred streams by tag
 
 ## How does it work?
 

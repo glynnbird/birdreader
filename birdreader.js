@@ -57,7 +57,7 @@ app.get('/unread', function(req, res) {
       article.unreadArticles(callback);
     }
   ], function(err,results) {
-    res.render('index.jade', { title: "Unread", stats:results[0], articles: results[1] } );
+    res.render('index.jade', { title: "Unread", type:"unread", stats:results[0], articles: results[1] } );
   });
 
 });
@@ -73,7 +73,7 @@ app.get('/read', function(req, res) {
       article.readArticles(callback);
     }
   ], function(err,results) {
-      res.render('index.jade', {title:'Read', stats:results[0], articles: results[1]} );
+      res.render('index.jade', {title:'Read', type:"read", stats:results[0], articles: results[1]} );
   });
 
 });
@@ -89,7 +89,7 @@ app.get('/starred', function(req, res) {
       article.starredArticles(callback);
     }
   ], function(err,results) {
-      res.render('index.jade', {title: 'Starred', stats:results[0], articles: results[1]} );
+      res.render('index.jade', {title: 'Starred', type:"starred", stats:results[0], articles: results[1]} );
   });
 
 });
@@ -200,6 +200,33 @@ app.get('/api/feed/:id/remove', function(req, res) {
     res.send({ success: !err, data: data});
   })
   
+});
+
+var byTag= function(type,req,res) {
+  var tag = req.params.tag.toLowerCase();
+  
+  async.parallel([
+    function(callback) {
+      article.stats(callback);
+    },
+    function(callback) {
+      article.articlesByTag(type,tag,callback);
+    }
+  ], function(err,results) {
+      res.render('index.jade', {title: type+' by tag '+tag, type:type, stats:results[0], articles: results[1]} );
+  });
+}
+
+app.get("/read/bytag/:tag", function(req,res) {
+  byTag("read",req,res);
+}); 
+
+app.get("/unread/bytag/:tag", function(req,res) {
+  byTag("unread",req,res);
+});
+
+app.get("/starred/bytag/:tag", function(req,res) {
+  byTag("starred",req,res);
 });
 
 // listen on port 3000

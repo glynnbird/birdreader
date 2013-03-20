@@ -21,7 +21,8 @@ html(lang='en')
               div.feedName @#{article.feedName}
                 span.tags
                   each tag in article.tags  
-                    span.label.mr10= tag
+                    a(href="/"+type+"/bytag/"+escape(tag.toLowerCase()))
+                      span.label.mr10= tag
               div.title
                 a(href="Javascript:readArticle('"+article._id+"')")= article.title
                 a.close(href="Javascript:removeArticle('"+article._id+"')") &times;

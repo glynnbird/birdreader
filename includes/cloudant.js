@@ -42,9 +42,13 @@
   					 "byts":  {
   					   "map": "function(doc) { if(doc.starred) {emit(['starred',doc.pubDateTS],null);} if(doc.read) {emit(['read',doc.pubDateTS],null);} if(!doc.read) {emit(['unread',doc.pubDateTS],null);} }",
   					   "reduce": "_count"
+  					 },
+  					 "bytag":  {
+  					   "map": "function(doc) { for(var i in doc.tags) { var tag=doc.tags[i].toLowerCase(); if(doc.starred) {emit(['starred',tag, doc.pubDateTS],null);} if(doc.read) {emit(['read',tag, doc.pubDateTS],null);} if(!doc.read) {emit(['unread',tag, doc.pubDateTS],null);} } }",
+  					   "reduce": "_count"
   					 }
          }
-      }	
+      }
   	];	
     
     console.log("Checking views");

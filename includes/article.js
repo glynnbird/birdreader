@@ -143,6 +143,23 @@ var unstar = function(id, callback) {
   });
 }
 
+// get articles, filtered by tag
+var articlesByTag = function(type,tag,callback) {
+ 
+  // equivalent of CouchDB https://<server>:<port>/articles/_design/matching/_view/bytag?limit=100&reduce=false&include_docs=true&descending=true&startkey=["starred","applez"]&endkey=["starred","apple"]
+  // N.B. when doing doing descending=true with startkey/endkey, you must also swap startkey/endkey(!)
+  articles.view('matching','bytag', { limit: 100, reduce: false, include_docs: true, descending:true, startkey:[type,tag+"z"],endkey: [type,tag]}, function(err,data) {
+    if(!err) {
+      var retval=[];
+      for(var i in data.rows) {
+        retval.push(data.rows[i].doc);
+      }
+    }
+
+    callback(err,retval);
+  })
+}
+
 module.exports = {
   unreadArticles: unreadArticles,
   readArticles: readArticles,
@@ -150,5 +167,6 @@ module.exports = {
   markRead: markRead,
   star: star,
   unstar: unstar,
-  stats: stats
+  stats: stats,
+  articlesByTag: articlesByTag
 }
