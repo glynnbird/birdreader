@@ -53,7 +53,8 @@ Mac: 0.21s
 RPi: 0.75s
 EC2: 0.25s
 
-In conclusion, the Raspberry Pi is quite capable of delivering sub-second page times but the best performance, not surprisingly, goes to the 
+In conclusion, the Raspberry Pi is quite capable of delivering sub-second page times but the best performance, 
+not surprisingly, goes to the faster processors. 
 
 
 
