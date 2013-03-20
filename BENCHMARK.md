@@ -39,7 +39,7 @@ This command was used on each machine, to eliminate network speed:
 $ time curl 'http://localhost:3000/unread' > /dev/null
 ```
 
-![RPi test](https://github.com/glynnbird/birdreader/raw/master/public/images/rpi.png "Raspberry Pi")
+![RPi test](https://github.com/glynnbird/birdreader/raw/master/public/images/rpi.jpg "Raspberry Pi")
 
 and the results were:
 
