@@ -103,6 +103,16 @@ The view creates a "map" function which emits keys like
 
 where "string" can be "unread", "read" or "starred", and "12345" is the timestamp of the article.
 
+Another view "bytag" has a different key:
+
+```
+  ['string','tag',12345]
+```
+
+where "string" can be "unread", "read" or "starred", the "tag" is the user supplied tag and "12345" is the timestamp of the article. This
+allows us to get unread articles tagged by "BBC" in newest first order, for example.
+
+
 ### Scraping articles
 
 Every so often, BirdReader fetches all the feeds using the [feedparser](https://npmjs.org/package/feedparser). Any articles newer than
