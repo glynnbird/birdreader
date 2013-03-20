@@ -12,6 +12,10 @@
   margin-top:3px;
   height:30px;
 }
+
+.readerlogo:hover {
+  text-decoration:none;
+}
 .showable {
   display: none;
   background-color:white;
