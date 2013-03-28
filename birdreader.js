@@ -21,7 +21,7 @@ if(config.authentication && config.authentication.on) {
 // need "node-schedule" to fetch feeds every so oftern
 var schedule = require('node-schedule');
 var rule = new schedule.RecurrenceRule();
-rule.minute = 15;
+rule.minute = [0,15,30,45];
 
 // fetch RSS every 15 mins
 var j = schedule.scheduleJob(rule, function(){
