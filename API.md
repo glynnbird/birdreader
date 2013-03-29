@@ -48,6 +48,25 @@ Parameters: keywords - the string to search for
 
 e.g. /api/search?keywords=book
 
+### Mark an article read
+
+GET /api/:id/read
+
+e.g. /api/b2f6ffbbb69e75df47631f1cf3808d17/read
+
+### Mark an article 'starred'
+
+GET /api/:id/star
+
+e.g. /api/b2f6ffbbb69e75df47631f1cf3808d17/star
+
+### Mark an article 'un-starred'
+
+GET /api/:id/unstar
+
+e.g. /api/b2f6ffbbb69e75df47631f1cf3808d17/unstar
+
+
 ## API Reference - Feeds
 
 ### Get all feeds
