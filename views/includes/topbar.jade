@@ -22,5 +22,8 @@ div.navbar.navbar-inverse.navbar-fixed-top
           li
             a(href="Javascript:location.reload();",title="Refresh")
               i.icon-refresh 
+          li
+            form.navbar-search.pull-left(action="/search",method="get")
+              input.search-query(id="keywords",name="keywords",type="text",placeholder="Search")
 
 

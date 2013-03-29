@@ -31,6 +31,38 @@
     });
   }
   
+  // check to see if view "id" has contains "content"; if not replace it
+  var checkView = function(id, content, callback) {
+    
+    // fetch the view
+    articles.get(id,function(err,data) {
+      
+      // if there's no existing data
+      if(!data) {
+        data= {};
+        var rev=null;
+      } else {
+        var rev = data._rev;
+        delete data._rev;
+      }
+     
+      // if comparison  of stringified versions are different
+      if(JSON.stringify(data) != JSON.stringify(content)) {
+        if(rev) {
+          content._rev=rev
+        }
+        
+        // update the saved version
+        articles.insert(content,function(err,data) {
+          callback(null,true);
+        });
+      } else {
+        callback(null,false);
+      }
+      
+    })
+  }
+  
   // create any required views
   var createViews = function(callback) {
     
@@ -48,30 +80,25 @@
   					   "reduce": "_count"
   					 }
          }
+      },
+      {
+        "_id": "_design/search",
+        "language": "javascript",
+         "indexes": {
+           "ft": {
+             "index": "function(doc) { index('title', doc.title, {store: 'no', index: 'analyzed'}); index('description', doc.description, {store: 'no', index: 'analyzed'}); index('pubDateTS',doc.pubDateTS) }"
+           }
+         }
       }
   	];	
     
     console.log("Checking views");
     for(var i in views) {
       var v = views[i];
-      articles.get(v._id,function(err,data) {
-        if(!data) {
-          data= {};
-          var rev=null;
-        } else {
-          var rev = data._rev;
-          delete data._rev;
-        }
-
-        if(JSON.stringify(data) != JSON.stringify(v)) {
-          if(rev) {
-            v._rev=rev
-          }
-          articles.insert(v,function(err,data) {
-          });
-        }
+      checkView(views[i]._id, views[i], function(err, data) {
         
-      })
+      });
+
     }
     callback();
   }

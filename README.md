@@ -29,6 +29,7 @@ BirdReader is designed to be installed on your own webserver or laptop, running 
 * - Twitter/Facebook sharing
 * - basic HTTP authentication (optional)
 * - filter read/unread/starred streams by tag
+* - full-text search
 
 ## How does it work?
 
@@ -112,6 +113,12 @@ Another view "bytag" has a different key:
 where "string" can be "unread", "read" or "starred", the "tag" is the user supplied tag and "12345" is the timestamp of the article. This
 allows us to get unread articles tagged by "BBC" in newest first order, for example.
 
+
+### Full-text search
+
+BirdRead supports full-text search of articles by utilising Cloudant's full-text capability. A Lucene index is created to allow the articles' titles
+and descriptions to searchable. A simple form on the top bar allows the user to search the collected articles with ease. N.B if you are using a 
+non-Cloudant backend (e.g. plain CouchDB), then the search facility will not work.
 
 ### Scraping articles
 

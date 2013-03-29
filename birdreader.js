@@ -94,6 +94,21 @@ app.get('/starred', function(req, res) {
 
 });
 
+
+// search 
+app.get('/search', function(req,res) {
+  async.parallel([
+    function(callback) {
+      article.stats(callback);
+    },
+    function(callback) {
+      article.search(req.query.keywords,callback);
+    }
+  ], function(err,results) {
+      res.render('index.jade', {title: 'Search "'+req.query.keywords+'"', type:"search", stats:results[0], articles: results[1]} );
+  });
+})
+
 // mark an article read
 app.get('/api/:id/read', function(req,res) {
   
@@ -199,7 +214,7 @@ app.get('/api/feed/:id/remove', function(req, res) {
   feed.remove(req.params.id,function(err,data) {
     res.send({ success: !err, data: data});
   })
-  
+
 });
 
 var byTag= function(type,req,res) {

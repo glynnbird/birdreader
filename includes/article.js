@@ -160,6 +160,21 @@ var articlesByTag = function(type,tag,callback) {
   })
 }
 
+// full text search for 'keywords
+var search = function(keywords, callback) {
+  var query = "description:"+keywords+" OR title:"+keywords
+  articles.search('search','ft', { q: query, limit:100, include_docs:true, sort:"\"-pubDateTS\""}, function(err,data){
+    if(!err) {
+      var retval=[];
+      for(var i in data.rows) {
+        retval.push(data.rows[i].doc);
+      }
+    }
+
+    callback(err,retval);
+  });
+}
+
 module.exports = {
   unreadArticles: unreadArticles,
   readArticles: readArticles,
@@ -168,5 +183,6 @@ module.exports = {
   star: star,
   unstar: unstar,
   stats: stats,
-  articlesByTag: articlesByTag
+  articlesByTag: articlesByTag,
+  search:search
 }
