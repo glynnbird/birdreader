@@ -109,6 +109,42 @@ app.get('/search', function(req,res) {
   });
 })
 
+// get raw unread articles
+app.get('/api/unread', function(req,res) {
+  
+  article.unreadArticles(function(err,data) {
+    res.send(data);
+  });;
+
+});
+
+// get raw read articles
+app.get('/api/read', function(req,res) {
+  
+  article.readArticles(function(err,data) {
+    res.send(data);
+  });;
+
+});
+
+// get raw starred articles
+app.get('/api/starred', function(req,res) {
+  
+  article.starredArticles(function(err,data) {
+    res.send(data);
+  });;
+
+});
+
+// get raw search results
+app.get('/api/search', function(req,res) {
+  
+  article.search(req.query.keywords,function(err,data) {
+    res.send(data);
+  });;
+
+});
+
 // mark an article read
 app.get('/api/:id/read', function(req,res) {
   
@@ -144,6 +180,29 @@ app.get('/api/feed/add', function(req,res) {
     res.send(data);
   })
 })
+
+
+var byTagApi= function(type,req,res) {
+  var tag = req.params.tag.toLowerCase();
+  
+  article.articlesByTag(type,tag,function(err,data) {
+    res.send(data);
+  });
+
+}
+
+app.get("/api/read/bytag/:tag", function(req,res) {
+  byTagApi("read",req,res);
+}); 
+
+app.get("/api/unread/bytag/:tag", function(req,res) {
+  byTagApi("unread",req,res);
+});
+
+app.get("/api/starred/bytag/:tag", function(req,res) {
+  byTagApi("starred",req,res);
+});
+
 
 // add form articles
 app.get('/add', function(req, res) {
@@ -188,6 +247,18 @@ app.get('/feed/:id', function(req, res) {
       res.render('feed.jade', {title: 'Feed', feed: results[1], stats: results[0], id: req.params.id});
   });
 
+});
+
+app.get('/api/feeds', function(req,res) {
+  feed.readAll(function(data) {
+    res.send(data);
+  });
+});
+
+app.get('/api/feed/:id', function(req,res) {
+  feed.get(req.params.id,function(err,data) {
+    res.send(data);
+  });
 });
 
 // add a tag to a feed

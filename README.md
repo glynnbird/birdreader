@@ -30,6 +30,7 @@ BirdReader is designed to be installed on your own webserver or laptop, running 
 * - basic HTTP authentication (optional)
 * - filter read/unread/starred streams by tag
 * - full-text search
+* - [API](https://github.com/glynnbird/birdreader/blob/master/API.md). 
 
 ## How does it work?
 
