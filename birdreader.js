@@ -18,7 +18,7 @@ if(config.authentication && config.authentication.on) {
 }
 
 // fetch articles every 5 minutes
-setInterval(feed.fetchArticles(function(err,results) { console.log("Fetched articles")}), 1000*60*5);
+setInterval(function() { feed.fetchArticles(function(err,results) { console.log("Fetched articles")}) }, 1000*60*5);
 
 // fire up the jade engine
 app.engine('jade', require('jade').__express);
