@@ -17,7 +17,7 @@ BirdReader is designed to be installed on your own webserver or laptop, running 
 ## Features
 
 * import your old Google Reader subscriptions 
-* fetches RSS every 15 minutes
+* fetches RSS every 5 minutes
 * web-based aggregated newsfeed
 * - mark articles as read
 * - delete articles without reading

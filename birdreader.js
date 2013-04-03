@@ -17,18 +17,8 @@ if(config.authentication && config.authentication.on) {
   app.use(express.basicAuth( config.authentication.username, config.authentication.password));
 }
 
-
-// need "node-schedule" to fetch feeds every so oftern
-var schedule = require('node-schedule');
-var rule = new schedule.RecurrenceRule();
-rule.minute = [0,15,30,45];
-
-// fetch RSS every 15 mins
-var j = schedule.scheduleJob(rule, function(){
-  feed.fetchArticles(function(err,results) {
-    console.log("Got "+results.length+" new articles");
-  })
-});
+// fetch articles every 5 minutes
+setInterval(feed.fetchArticles(function(err,results) { console.log("Fetched articles")}), 1000*60*5);
 
 // fire up the jade engine
 app.engine('jade', require('jade').__express);
