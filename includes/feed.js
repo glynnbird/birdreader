@@ -26,7 +26,8 @@ var fetchFeed=function(feed,callback) {
   var latest = moment(feed.lastModified);
   var headers = {'If-Modified-Since' : newerThan.format('ddd, DD MMM YYYY HH:mm:ss Z')} //, 'If-None-Match': 'etag' };
   var reqObj = {'uri': feed.xmlUrl,
-                'headers': headers };
+                'headers': headers,
+                'timeout': 5000 };
   var articles=[];
 
   // parseString()
@@ -58,6 +59,7 @@ var fetchFeed=function(feed,callback) {
         callback(null,articles);
       })
       .on('error', function(error) {
+        callback(null,articles);
       })
   });
   
