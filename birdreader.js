@@ -17,6 +17,11 @@ if(config.authentication && config.authentication.on) {
   app.use(express.basicAuth( config.authentication.username, config.authentication.password));
 }
 
+// Purge older articles
+if(config.purgeArticles && config.purgeArticles.on && config.purgeArticles.purgeBefore>0) {
+  setInterval(function() { article.purge(config.purgeArticles.purgeBefore,function(err,data) { } ) }, 1000*60*60*24);
+}
+
 // fetch articles every 5 minutes
 setInterval(function() { feed.fetchArticles(function(err,results) { console.log("Fetched articles")}) }, 1000*60*5);
 

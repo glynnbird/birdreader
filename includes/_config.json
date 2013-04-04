@@ -10,5 +10,9 @@
    "on": false,
    "username": "<your BirdReader username>",
    "password": "<your BirdReader password>"
+  },
+  "purgeArticles": {
+    "on": false,
+    "purgeBefore": 15
   }
 }

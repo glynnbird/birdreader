@@ -212,6 +212,19 @@ BirdReader allows you to protect your webserver by username and password by addi
 
 Authentication will only be enforced if "authentication.on" is set to "true". A restart of BirdReader is required to pick up the config.
 
+## Purging older articles
+
+If you don't want to keep articles older than x days, then you can add the following to your config:
+
+```
+"purgeArticles": {
+  "on": true,
+  "purgeBefore": 15
+}
+```
+
+The above will instruct BirdReader to purge articles older than 15 days every 24 hours.
+
 ## Benchmarks
 
 BirdReader has been tested on a Mac, Amazon EC2 and Raspberry Pi. [Benchmarks here](https://github.com/glynnbird/birdreader/blob/master/BENCHMARK.md).

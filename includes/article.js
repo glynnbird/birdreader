@@ -1,5 +1,7 @@
 var articles = require('./cloudant.js').articles;
 
+var moment = require('moment');
+
 // fetch unread articles from couchdb
 var unreadArticles = function(callback) {
   
@@ -175,6 +177,34 @@ var search = function(keywords, callback) {
   });
 }
 
+// remove articles older than a purgeBefore days 
+var purge = function(purgeBefore,callback) {
+  
+  // calculate timestamp of "purgeBefore" days ago
+  var ts = moment().day(-1*purgeBefore).format("X");
+  
+  // fetch oldest read articles older than "purgeBefore" days old
+  articles.view('matching','byts', { limit:5000, reduce: false, startkey:["read","0"],endkey: ["read",""+ts]}, function(err,data) {
+    if(!err && data.rows.length>0) {
+      console.log("Purging "+data.rows.length+" articles older than "+purgeBefore+" days old");
+      var toDelete=[];
+      for(var i in data.rows) {
+        var row = data.rows[i];
+        var article = {};
+        article._id = row.id;
+        article._rev = row.value;
+        article._deleted = true;
+        toDelete.push(article);
+      }
+      
+      articles.bulk({"docs":toDelete},function(err,d) {
+        console.log("Deleted ",toDelete.length," articles");
+      })
+    }
+    callback(err,data);
+  })
+}
+
 module.exports = {
   unreadArticles: unreadArticles,
   readArticles: readArticles,
@@ -184,5 +214,6 @@ module.exports = {
   unstar: unstar,
   stats: stats,
   articlesByTag: articlesByTag,
-  search:search
+  search:search,
+  purge: purge
 }

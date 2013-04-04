@@ -72,7 +72,7 @@
          "language": "javascript",
          "views": {
   					 "byts":  {
-  					   "map": "function(doc) { if(doc.starred) {emit(['starred',doc.pubDateTS],null);} if(doc.read) {emit(['read',doc.pubDateTS],null);} if(!doc.read) {emit(['unread',doc.pubDateTS],null);} }",
+  					   "map": "function(doc) { if(doc.starred) {emit(['starred',doc.pubDateTS],doc._rev);} if(doc.read) {emit(['read',doc.pubDateTS],doc._rev);} if(!doc.read) {emit(['unread',doc.pubDateTS],doc._rev);} }",
   					   "reduce": "_count"
   					 },
   					 "bytag":  {
