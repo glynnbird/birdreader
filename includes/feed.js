@@ -59,7 +59,6 @@ var fetchFeed=function(feed,callback) {
         callback(null,articles);
       })
       .on('error', function(error) {
-        callback(null,articles);
       })
   });
   
