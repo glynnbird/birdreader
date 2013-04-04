@@ -1,5 +1,6 @@
 // load the config
 var config = require("./includes/config.js").get;
+var cloudant = require("./includes/cloudant.js");
 
 // we need access to the articles  and feeds databases on Cloudant
 var article = require('./includes/article.js');
@@ -24,6 +25,9 @@ if(config.purgeArticles && config.purgeArticles.on && config.purgeArticles.purge
 
 // fetch articles every 5 minutes
 setInterval(function() { feed.fetchArticles(function(err,results) { console.log("Fetched articles")}) }, 1000*60*5);
+
+// compact the databases every 24 hours
+setInterval(function() { cloudant.compact( function(err,data){} ) }, 1000*60*60*24);
 
 // fire up the jade engine
 app.engine('jade', require('jade').__express);

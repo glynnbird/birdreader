@@ -103,11 +103,24 @@
     callback();
   }
   
+// compact the databases
+var compact = function(callback) {
+
+  nano.db.compact("feeds",function(err,data) {
+  });
+  
+  nano.db.compact("articles",function(err,data) {
+  });
+  callback(null,{});
+   
+}
+  
   // create some databases
   async.series( [ createFeeds, createArticles, createViews] );
 
   module.exports = {
     feeds: feeds,
     articles: articles,
-    createViews: createViews
+    createViews: createViews,
+    compact: compact
   }
