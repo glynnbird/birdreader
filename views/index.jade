@@ -14,37 +14,39 @@ html(lang='en')
         p 
         div.spacer
       
-      ol
-        each article in articles
-          li(id=article._id)
-            div.tweet
-              div.feedName 
-                a.feedlink(href="/"+type+"/byfeed/"+escape(article.feedName)) @#{article.feedName}
-                if article.icon != null
-                  img.miniicon(src=article.icon)
-                span.tags.ml10
-                  each tag in article.tags  
-                    a(href="/"+type+"/bytag/"+escape(tag.toLowerCase()))
-                      span.label.mr10= tag
-              div.title
-                a(href="Javascript:readArticle('"+article._id+"')")= article.title
-                a.close(href="Javascript:removeArticle('"+article._id+"')") &times;
-              div.expand
-                a.mr10(id="expand"+article._id,href="Javascript:readArticle('"+article._id+"')") Expand
-                a.mr10.tobeshown(id="hide"+article._id,href="Javascript:hideArticle('"+article._id+"')") Hide
-              div.showable.pb20(id="body"+article._id)
-                a.btn.btn-success.mr5(href=article.link,target='_blank') Go
-                - if (article.starred)
-                  a.btn-warning.btn.mr5(id="star"+article._id,href="Javascript:unstarArticle('"+article._id+"')")
-                    i.icon-star
-                - else
-                  a.btn.mr5(id="star"+article._id,href="Javascript:starArticle('"+article._id+"')")
-                    i.icon-star
-                a.btn.mr5(href="http://twitter.com/share?url="+article.link,target="_new",rel="nofollow") Twitter
-                a.btn.mr5(href="http://www.facebook.com/sharer.php?u="+article.link,target="_new",rel="nofollow") Facebook
-                div.mb10
-                div(id="description"+article._id) 
-                div.mb10
+
+      each article in articles
+        div(id=article._id)
+          div.span1
+            if article.icon != null
+              img.bigicon(src=article.icon)
+          div.span9
+            div.feedName 
+              a.feedlink(href="/"+type+"/byfeed/"+escape(article.feedName)) @#{article.feedName}
+              span.tags.ml10
+                each tag in article.tags  
+                  a(href="/"+type+"/bytag/"+escape(tag.toLowerCase()))
+                    span.label.mr10= tag
+            div.title
+              a(href="Javascript:readArticle('"+article._id+"')")= article.title
+              a.close(href="Javascript:removeArticle('"+article._id+"')") &times;
+            div.expand
+              a.mr10(id="expand"+article._id,href="Javascript:readArticle('"+article._id+"')") Expand
+              a.mr10.tobeshown(id="hide"+article._id,href="Javascript:hideArticle('"+article._id+"')") Hide
+          div.span12
+            div.showable.pb20(id="body"+article._id)
+              a.btn.btn-success.mr5(href=article.link,target='_blank') Go
+              - if (article.starred)
+                a.btn-warning.btn.mr5(id="star"+article._id,href="Javascript:unstarArticle('"+article._id+"')")
+                  i.icon-star
+              - else
+                a.btn.mr5(id="star"+article._id,href="Javascript:starArticle('"+article._id+"')")
+                  i.icon-star
+              a.btn.mr5(href="http://twitter.com/share?url="+article.link,target="_new",rel="nofollow") Twitter
+              a.btn.mr5(href="http://www.facebook.com/sharer.php?u="+article.link,target="_new",rel="nofollow") Facebook
+              div.mb10
+              div(id="description"+article._id) 
+            hr
 
  
     include includes/footer
