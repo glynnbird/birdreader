@@ -5,6 +5,7 @@ var request = require('request');
 var feedparser = require('feedparser');
 var moment = require('moment');
 var extractor = require('extractor');
+var favicon = require('./favicon.js');
 
 // read all the feeds from Cloudant
 var readAll = function(callback) {
@@ -164,12 +165,23 @@ var add = function(url,callback) {
       
       // if we have found a feed
       if(feed.xmlUrl) {
-        // add it to the database
-        feeds.insert(feed,function(err,data) {
-//          console.log(err,data);          
+        
+        // see if we can find a favicon
+        favicon.find(feed.htmlUrl,function(faviconUrl) {
+          
+          // add icon to feed
+          feed.icon = faviconUrl;
+          
+          // add it to the database
+          feeds.insert(feed,function(err,data) {
+  //          console.log(err,data);          
+          })
+          var retval = { success: true, message: "Added feed for "+url};
+          callback(true,retval);
+          
         })
-        var retval = { success: true, message: "Added feed for "+url};
-        callback(true,retval);
+        
+
       } else {
         var retval = { success: false, message: "Could not add feed for "+url};
         callback(false,retval);
@@ -223,6 +235,13 @@ var remove = function(id,callback) {
   })
 }
 
+// update a feed 
+var update = function(feed, callback) {
+  feeds.insert(feed,function(err,data) {
+    callback(err,data);
+  })
+}
+
 module.exports = {
   readAll: readAll,
   fetchArticles: fetchArticles,
@@ -230,5 +249,6 @@ module.exports = {
   get: get,
   addTag: addTag,
   removeTag: removeTag,
-  remove: remove
+  remove: remove,
+  update: update
 }
