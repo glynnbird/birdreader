@@ -33,7 +33,7 @@ html(lang='en')
       h3 Tags
       div.tags
         each tag in feed.tags  
-          a.btn.btn-large.mr10(href="Javascript:removeTag('"+id+"','"+tag+"')")
+          a.btn.btn-large.mr10(href='#',onclick="removeTag('"+id+"','"+tag+"')")
             i.icon-remove
             span &nbsp; #{tag}
     
@@ -43,7 +43,7 @@ html(lang='en')
           input(type="submit",value="Add Tag")    
  
       h3 Remove Feed
-      a.btn.btn-large.btn-danger(href="Javascript:removeFeed('"+id+"')")
+      a.btn.btn-large.btn-danger(href='#',onclick="removeFeed('"+id+"')")
         i.icon-remove
         span &nbsp; REMOVE
         
