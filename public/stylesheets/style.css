@@ -58,6 +58,10 @@ body {
   margin-right:10px;
 }
 
+.ml10 {
+  margin-left:10px;
+}
+
 .mr40 {
   margin-right:40px;
 }
@@ -126,5 +130,12 @@ h1 {
 .favicon {
   width:32px;
   height:32px;
+}
+
+.miniicon {
+  width:16px;
+  height:16px;
+  margin-right:10px;
+  margin-left:10px;
 }
 
