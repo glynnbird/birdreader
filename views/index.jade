@@ -24,6 +24,8 @@ html(lang='en')
             div.span11
               div.feedName 
                 a.feedlink(href="/"+type+"/byfeed/"+escape(article.feedName)) @#{article.feedName}
+                if article.icon != null
+                  img.miniicon(src=article.icon)
                 span.tags.ml10
                   each tag in article.tags  
                     a(href="/"+type+"/bytag/"+escape(tag.toLowerCase()))

@@ -140,19 +140,25 @@ h1 {
   height:48px;
 }
 
+.miniicon {
+ display:none;
+}
+
 @media (max-width: 768px) {
   .bigicon {
     width:16px;
     height:16px;
     display:none;
   }
+  .miniicon {
+    width:16px;
+    height:16px;
+    margin-right:10px;
+    margin-left:10px;
+    display:inline;
+  }
 }
 
 
-.miniicon {
-  width:16px;
-  height:16px;
-  margin-right:10px;
-  margin-left:10px;
-}
+
 
