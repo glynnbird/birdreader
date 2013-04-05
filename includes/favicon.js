@@ -31,8 +31,11 @@ var find = function(pageurl,callback) {
       
       if(iconurl) {
         // if this is not an absolute url
-        if(!iconurl.match(/^http/)) {
+        if(!iconurl.match(/^http/) && !iconurl.match(/^\/\//)) {
           // construct an absolute url
+          if(!iconurl.match(/^\//)) {
+            iconurl = "/" + iconurl;
+          }
           iconurl = parsedUrl.protocol + "//"+parsedUrl.host + iconurl;
         }
       } 

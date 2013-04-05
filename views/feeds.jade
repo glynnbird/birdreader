@@ -19,10 +19,14 @@ html(lang='en')
         each feed in feeds
           li(id=feed._id)
             div.feed
-              a.feedName(href="/feed/"+feed._id) @#{feed.title}
-              div.tags
-                each tag in feed.tags  
-                  span.label.mr10= tag
+              div.span1
+                if feed.icon != null
+                  img.favicon(src=feed.icon)
+              div.span8
+                a.feedName(href="/feed/"+feed._id) @#{feed.title}
+                div.tags
+                  each tag in feed.tags  
+                    span.label.mr10= tag
 
  
     include includes/footer

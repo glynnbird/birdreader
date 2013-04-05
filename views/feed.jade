@@ -14,6 +14,10 @@ html(lang='en')
         p 
         div.spacer
       
+      if feed.icon != null
+        h3 Icon
+        img.favicon(src=feed.icon)
+      
       h3 Type
       div #{feed.type}
       

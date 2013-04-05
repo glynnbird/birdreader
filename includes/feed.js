@@ -42,6 +42,11 @@ var fetchFeed=function(feed,callback) {
         a.description=data.description;
         a.pubDate = data.pubDate;
         a.link = data.link;
+        if(typeof feed.icon !="undefined") {
+          a.icon = feed.icon
+        } else {
+          a.icon = null;
+        }
         var m = moment(data.pubDate);
         if(m) {
           a.pubDateTS = m.format("X");

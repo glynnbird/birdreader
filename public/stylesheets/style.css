@@ -104,7 +104,7 @@ li {
   color:#666;
 }
 .tags {
-  margin-left:15px;
+
 }
 
 .expand a:link, .expand a:visited {
@@ -122,3 +122,9 @@ h1 {
 .hero-unit h1 {
   font-size: 30px;
 }
+
+.favicon {
+  width:32px;
+  height:32px;
+}
+
