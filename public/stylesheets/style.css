@@ -140,6 +140,14 @@ h1 {
   height:48px;
 }
 
+@media (max-width: 768px) {
+  .bigicon {
+    width:16px;
+    height:16px;
+    display:none;
+  }
+}
+
 
 .miniicon {
   width:16px;
