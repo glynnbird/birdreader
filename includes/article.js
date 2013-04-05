@@ -162,6 +162,23 @@ var articlesByTag = function(type,tag,callback) {
   })
 }
 
+// get articles, filtered by feed
+var articlesByFeed = function(type,feed,callback) {
+ 
+  // equivalent of CouchDB https://<server>:<port>/articles/_design/matching/_view/bytag?limit=100&reduce=false&include_docs=true&descending=true&startkey=["starred","applez"]&endkey=["starred","apple"]
+  // N.B. when doing doing descending=true with startkey/endkey, you must also swap startkey/endkey(!)
+  articles.view('matching','byfeed', { limit: 100, reduce: false, include_docs: true, descending:true, startkey:[type,feed+"z"],endkey: [type,feed]}, function(err,data) {
+    if(!err) {
+      var retval=[];
+      for(var i in data.rows) {
+        retval.push(data.rows[i].doc);
+      }
+    }
+
+    callback(err,retval);
+  })
+}
+
 // full text search for 'keywords
 var search = function(keywords, callback) {
   var query = "description:"+keywords+" OR title:"+keywords
@@ -214,6 +231,7 @@ module.exports = {
   unstar: unstar,
   stats: stats,
   articlesByTag: articlesByTag,
+  articlesByFeed: articlesByFeed,
   search:search,
   purge: purge
 }

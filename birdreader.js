@@ -203,6 +203,28 @@ app.get("/api/starred/bytag/:tag", function(req,res) {
 });
 
 
+var byFeedApi= function(type,req,res) {
+  var feed = req.params.feed.toLowerCase();
+  
+  article.articlesByFeed(type,feed,function(err,data) {
+    res.send(data);
+  });
+
+}
+
+app.get("/api/read/byfeed/:feed", function(req,res) {
+  byFeedApi("read",req,res);
+}); 
+
+app.get("/api/unread/byfeed/:feed", function(req,res) {
+  byFeedApi("unread",req,res);
+});
+
+app.get("/api/starred/byfeed/:feed", function(req,res) {
+  byFeedApi("starred",req,res);
+});
+
+
 // add form articles
 app.get('/add', function(req, res) {
   
@@ -312,6 +334,33 @@ app.get("/unread/bytag/:tag", function(req,res) {
 
 app.get("/starred/bytag/:tag", function(req,res) {
   byTag("starred",req,res);
+});
+
+var byFeed= function(type,req,res) {
+  var feed = req.params.feed.toLowerCase();
+  
+  async.parallel([
+    function(callback) {
+      article.stats(callback);
+    },
+    function(callback) {
+      article.articlesByFeed(type,feed,callback);
+    }
+  ], function(err,results) {
+      res.render('index.jade', {title: type+' by feed '+feed, type:type, stats:results[0], articles: results[1]} );
+  });
+}
+
+app.get("/read/byfeed/:feed", function(req,res) {
+  byFeed("read",req,res);
+}); 
+
+app.get("/unread/byfeed/:feed", function(req,res) {
+  byFeed("unread",req,res);
+});
+
+app.get("/starred/byfeed/:feed", function(req,res) {
+  byFeed("starred",req,res);
 });
 
 // listen on port 3000

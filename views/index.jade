@@ -18,7 +18,8 @@ html(lang='en')
         each article in articles
           li(id=article._id)
             div.tweet
-              div.feedName @#{article.feedName}
+              div.feedName 
+                a.feedlink(href="/"+type+"/byfeed/"+escape(article.feedName)) @#{article.feedName}
                 if article.icon != null
                   img.miniicon(src=article.icon)
                 span.tags.ml10

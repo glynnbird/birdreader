@@ -78,7 +78,11 @@
   					 "bytag":  {
   					   "map": "function(doc) { for(var i in doc.tags) { var tag=doc.tags[i].toLowerCase(); if(doc.starred) {emit(['starred',tag, doc.pubDateTS],null);} if(doc.read) {emit(['read',tag, doc.pubDateTS],null);} if(!doc.read) {emit(['unread',tag, doc.pubDateTS],null);} } }",
   					   "reduce": "_count"
-  					 }
+  					 },
+   					 "byfeed":  {
+   					   "map": "function(doc) { var tag=doc.feedName.toLowerCase(); if(doc.starred) {emit(['starred',tag, doc.pubDateTS],null);} if(doc.read) {emit(['read',tag, doc.pubDateTS],null);} if(!doc.read) {emit(['unread',tag, doc.pubDateTS],null);}  }",
+   					   "reduce": "_count"
+   					 }
          }
       },
       {

@@ -40,6 +40,24 @@ GET /api/starred/bytag/bbc
 
 where the last item in the path is the tag name.
 
+### Get Unread articles by feed
+
+GET /api/unread/feed/Apple+Insider
+
+where the last item in the path is the feed name.
+
+### Get Read articles by feed
+
+GET /api/read/byfeed/Apple+Insider
+
+where the last item in the path is the feed name.
+
+### Get Starred articles by feed
+
+GET /api/starred/byfeed/Apple+Insider
+
+where the last item in the path is the feed name.
+
 ### Search
 
 GET /api/search

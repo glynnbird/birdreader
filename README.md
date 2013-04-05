@@ -30,6 +30,7 @@ BirdReader is designed to be installed on your own webserver or laptop, running 
 * - basic HTTP authentication (optional)
 * - filter read/unread/starred streams by tag
 * - full-text search
+* - icons for feeds and articles
 * - [API](https://github.com/glynnbird/birdreader/blob/master/API.md). 
 
 ## How does it work?
@@ -54,7 +55,8 @@ The 'feeds' database stores a document per RSS feed you are subscribed to e.g.
     "xmlUrl": "http://feeds.feedburner.com/github",
     "htmlUrl": "http://pipes.yahoo.com/pipes/pipe.info?_id=13d93fdc3d1fb71d8baa50a1e8b50381",
     "tags": ["OpenSource"],
-    "lastModified": "2013-03-14 15:06:03 +00:00"
+    "lastModified": "2013-03-14 15:06:03 +00:00",
+    "icon": "http://www.bbc.co.uk/favicon.ico"
 }
 ```
 
@@ -79,7 +81,8 @@ The 'articles' database stores a document per article e.g. :
     "link": "http://www.bbc.co.uk/news/entertainment-arts-21805140#sa-ns_mchannel=rss&ns_source=PublicRSS20-sa",
     "pubDateTS": 1363360831,
     "read": false,
-    "starred": false
+    "starred": false,
+    "icon": "http://www.bbc.co.uk/favicon.ico"
 }
 ```
 
@@ -229,6 +232,16 @@ The above will instruct BirdReader to purge articles older than 15 days every 24
 
 BirdReader has been tested on a Mac, Amazon EC2 and Raspberry Pi. [Benchmarks here](https://github.com/glynnbird/birdreader/blob/master/BENCHMARK.md).
 
+## Icons
+
+When a feed is added to BirdReader, we attempt to get an "icon" for the feed based on the "Favicon" of the blog. This is stored in the feeds 
+database and every article that is fetched subsequently, inherits the feed's icon.
+
+This feature was added after to launch. To retro-fit icons to your existing feeds, run:
+
+```
+  node retrofit_favicons.js
+```
 
 
 
