@@ -29,8 +29,10 @@ BirdReader is designed to be installed on your own webserver or laptop, running 
 * - Twitter/Facebook sharing
 * - basic HTTP authentication (optional)
 * - filter read/unread/starred streams by tag
+* - filter read/unread/starred streams by feed
 * - full-text search
 * - icons for feeds and articles
+* - expand all
 * - [API](https://github.com/glynnbird/birdreader/blob/master/API.md). 
 
 ## How does it work?

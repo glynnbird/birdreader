@@ -11,12 +11,14 @@ html(lang='en')
         h1 #{title}
         p 
         p #{articles.length} #{title} articles
+          if title == 'Unread' && articles.length > 0
+            a.btn.ml10(href='#',onclick='showAll()') Expand All
         p 
         div.spacer
       
 
       each article in articles
-        div(id=article._id)
+        div.article(id=article._id)
           div.row
             div.span1
               if article.icon != null

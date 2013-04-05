@@ -80,3 +80,9 @@ var removeFeed = function(feedid) {
   })
   return false;
 }
+
+var showAll = function() {
+  $('.article').each(function(index){ 
+    readArticle(this.id);
+  });
+}
