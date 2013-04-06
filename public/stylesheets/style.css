@@ -169,13 +169,10 @@ h1 {
   font-size:12px;
 }
 
-.summary {
+.summary:link,.summary:visited,.summary:hover {
     text-decoration: none;
     color:#666;
     font-size:13px;
-}
-.summary:hover {
-  text-decoration:none;
 }
 
 
