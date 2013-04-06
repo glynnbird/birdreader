@@ -34,7 +34,9 @@ html(lang='en')
                       span.label.mr10= tag
               div.title
                 a(href="Javascript:readArticle('"+article._id+"')")= article.title
+                span.diff &nbsp; #{article.diff}
                 a.close(href="Javascript:removeArticle('"+article._id+"')") &times;
+              a.summary(id="expand"+article._id,href="Javascript:readArticle('"+article._id+"')")= article.summary
               div.expand
                 a.mr10(id="expand"+article._id,href="Javascript:readArticle('"+article._id+"')") Expand
                 a.mr10.tobeshown(id="hide"+article._id,href="Javascript:hideArticle('"+article._id+"')") Hide

@@ -31,12 +31,14 @@ var readArticle = function(id) {
   $('#body'+id).show();
   $('#hide'+id).show();
   $('#expand'+id).hide();
+  $('#summary'+id).hide();
   apiMarkAsRead(id);
 }
 
 var hideArticle = function(id) {
   $('#body'+id).hide();
   $('#hide'+id).hide();
+  $('#summary'+id).show();
   $('#expand'+id).show();
 }
 

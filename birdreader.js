@@ -6,6 +6,9 @@ var cloudant = require("./includes/cloudant.js");
 var article = require('./includes/article.js');
 var feed = require('./includes/feed.js');
 
+// moment library
+var moment = require('moment');
+
 // we need the express framework
 var express = require('express');
 var app = express();
@@ -45,6 +48,54 @@ app.get('/', function(req, res) {
   res.end('This page has moved');
 });
 
+
+// trim sentence to N words
+var trimByWord = function(sentence,n) {
+  var result = sentence;
+  var resultArray = result.split(" ");
+  if(resultArray.length > n){
+    resultArray = resultArray.slice(0, n);
+    result = resultArray.join(" ") + " ";
+  }
+  result += "...";
+  return result;
+}
+
+// calculate diff string for list of articles
+var processArticles = function(articles) {
+  var now = moment();
+  for(var i in articles) {
+    
+    // calculate diff string
+    var a = articles[i];
+    var then = moment(a.pubDate);
+    var diff = now.diff(then,'minutes');
+    var val = null;
+    var units = null;
+    if(diff>60*24) {
+      val = parseInt(diff / (60*24));
+      units = "day";
+    } else if(diff>60) {
+      val = parseInt(diff / 60);
+      units = "hour";
+    } else {
+      val = parseInt(diff);
+      units = "minute";
+    }
+    if(val == 1) {
+      a.diff = "1 "+units+" ago";
+    } else {
+      a.diff = val + " " + units+"s ago";
+    }
+    
+    // calculate summary block
+    a.summary = trimByWord(a.description.replace(RegExp('<\/?[^<>]*>', 'gi'), ''), 20); 
+    
+    articles[i]=a;
+  }
+  return articles;
+}
+
 // unread articles
 app.get('/unread', function(req, res) {
   
@@ -56,7 +107,8 @@ app.get('/unread', function(req, res) {
       article.unreadArticles(callback);
     }
   ], function(err,results) {
-    res.render('index.jade', { title: "Unread", type:"unread", stats:results[0], articles: results[1] } );
+    var articles = processArticles(results[1]);
+    res.render('index.jade', { title: "Unread", type:"unread", stats:results[0], articles: articles } );
   });
 
 });
@@ -72,7 +124,8 @@ app.get('/read', function(req, res) {
       article.readArticles(callback);
     }
   ], function(err,results) {
-      res.render('index.jade', {title:'Read', type:"read", stats:results[0], articles: results[1]} );
+      var articles = processArticles(results[1]);
+      res.render('index.jade', {title:'Read', type:"read", stats:results[0], articles: articles} );
   });
 
 });
@@ -88,7 +141,8 @@ app.get('/starred', function(req, res) {
       article.starredArticles(callback);
     }
   ], function(err,results) {
-      res.render('index.jade', {title: 'Starred', type:"starred", stats:results[0], articles: results[1]} );
+      var articles = processArticles(results[1]);
+      res.render('index.jade', {title: 'Starred', type:"starred", stats:results[0], articles: articles} );
   });
 
 });
@@ -104,7 +158,8 @@ app.get('/search', function(req,res) {
       article.search(req.query.keywords,callback);
     }
   ], function(err,results) {
-      res.render('index.jade', {title: 'Search "'+req.query.keywords+'"', type:"search", stats:results[0], articles: results[1]} );
+      var articles = processArticles(results[1]);
+      res.render('index.jade', {title: 'Search "'+req.query.keywords+'"', type:"search", stats:results[0], articles: articles} );
   });
 })
 
@@ -320,7 +375,8 @@ var byTag= function(type,req,res) {
       article.articlesByTag(type,tag,callback);
     }
   ], function(err,results) {
-      res.render('index.jade', {title: type+' by tag '+tag, type:type, stats:results[0], articles: results[1]} );
+      var articles = processArticles(results[1]);
+      res.render('index.jade', {title: type+' by tag '+tag, type:type, stats:results[0], articles: articles} );
   });
 }
 
@@ -347,7 +403,8 @@ var byFeed= function(type,req,res) {
       article.articlesByFeed(type,feed,callback);
     }
   ], function(err,results) {
-      res.render('index.jade', {title: type+' by feed '+feed, type:type, stats:results[0], articles: results[1]} );
+      var articles = processArticles(results[1]);
+      res.render('index.jade', {title: type+' by feed '+feed, type:type, stats:results[0], articles: articles} );
   });
 }
 

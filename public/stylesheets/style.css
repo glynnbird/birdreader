@@ -104,7 +104,7 @@ li {
   color:black;
 }
 .title {
-  fine-size:14px;
+  font-size:15px;
 }
 .title a:link, .title a:visited {
   text-decoration: none;
@@ -163,6 +163,20 @@ h1 {
   
 }
 
+.diff {
+  font-style: italic;
+  color:#bbb;
+  font-size:12px;
+}
+
+.summary {
+    text-decoration: none;
+    color:#666;
+    font-size:13px;
+}
+.summary:hover {
+  text-decoration:none;
+}
 
 
 
