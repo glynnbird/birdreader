@@ -46,7 +46,7 @@ var find = function(pageurl,callback) {
        
         // see if there is an favicon.ico file there
         request(guessurl, function (error, response, body) {
-          if (!error && response.statusCode == 200) {
+          if (!error && response.statusCode == 200 && response.headers['content-length']>0) {
             iconurl = guessurl;
           }
           callback(iconurl);
