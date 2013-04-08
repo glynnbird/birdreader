@@ -87,11 +87,8 @@ var fetchArticles = function(callback) {
     // create a fetch function for each one
     var functions=[];
     for(var i in allFeeds) {
-      if(allFeeds[i].xmlUrl != 'http://code.google.com/feeds/p/trophyim/updates/basic') {
-        addToSpider(allFeeds[i], functions);
-      } 
-    }
-    
+      addToSpider(allFeeds[i], functions);
+    }    
     
     // perform fetches in parallel
     async.parallel(functions, function(err, results){
