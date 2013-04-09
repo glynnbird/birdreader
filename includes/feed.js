@@ -6,6 +6,7 @@ var feedparser = require('feedparser');
 var moment = require('moment');
 var extractor = require('extractor');
 var favicon = require('./favicon.js');
+var crypto = require('crypto');
 
 // read all the feeds from Cloudant
 var readAll = function(callback) {
@@ -36,6 +37,10 @@ var fetchFeed=function(feed,callback) {
     feedparser.parseString(body)
       .on('article', function(data) {
         var a = {}
+        // use a hash of the articles's url as the document id - to prevent duplicates
+        var shasum = crypto.createHash('sha1');
+        shasum.update(data.link);
+        a._id = shasum.digest('hex');
         a.feedName=feed.title;
         a.tags=feed.tags;
         a.title=data.title;
@@ -101,7 +106,8 @@ var fetchArticles = function(callback) {
          // write the articles to the database
          if(bigresults.length>0) {
            articles.bulk({"docs":bigresults},function(err,d) {
-//             console.log("Written ",bigresults.length," articles");
+             console.log("Written ",bigresults.length," articles");
+             console.log(bigresults);
            })           
          }
 
