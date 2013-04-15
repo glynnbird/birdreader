@@ -38,32 +38,35 @@ var fetchFeed=function(feed,callback) {
       .on('article', function(data) {
         var a = {}
         // use a hash of the articles's url as the document id - to prevent duplicates
-        var shasum = crypto.createHash('sha1');
-        shasum.update(data.link);
-        a._id = shasum.digest('hex');
-        a.feedName=feed.title;
-        a.tags=feed.tags;
-        a.title=data.title;
-        a.description=data.description;
-        a.pubDate = data.pubDate;
-        a.link = data.link;
-        if(typeof feed.icon !="undefined") {
-          a.icon = feed.icon
-        } else {
-          a.icon = null;
+        if(typeof data.link=='string') {
+          var shasum = crypto.createHash('sha1');
+          shasum.update(data.link);
+          a._id = shasum.digest('hex');
+          a.feedName=feed.title;
+          a.tags=feed.tags;
+          a.title=data.title;
+          a.description=data.description;
+          a.pubDate = data.pubDate;
+          a.link = data.link;
+          if(typeof feed.icon !="undefined") {
+            a.icon = feed.icon
+          } else {
+            a.icon = null;
+          }
+          var m = moment(data.pubDate);
+          if(m) {
+            a.pubDateTS = m.format("X");
+            a.read=false;
+            a.starred=false;
+            if(m.isAfter(newerThan)) {
+              articles.push(a);
+              if(m.isAfter(latest)) {
+                latest = m;
+              }
+            } 
+          }
         }
-        var m = moment(data.pubDate);
-        if(m) {
-          a.pubDateTS = m.format("X");
-          a.read=false;
-          a.starred=false;
-          if(m.isAfter(newerThan)) {
-            articles.push(a);
-            if(m.isAfter(latest)) {
-              latest = m;
-            }
-          } 
-        }
+
       })
       .on('end', function() {
         feed.lastModified = latest.format('YYYY-MM-DD HH:mm:ss Z');
