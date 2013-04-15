@@ -89,7 +89,11 @@ var processArticles = function(articles) {
     }
     
     // calculate summary block
-    a.summary = trimByWord(a.description.replace(RegExp('<\/?[^<>]*>', 'gi'), ''), 20); 
+    if(typeof a.description == "string") {
+      a.summary = trimByWord(a.description.replace(RegExp('<\/?[^<>]*>', 'gi'), ''), 20);       
+    } else {
+      a.summary = a.description = "";
+    }
     
     articles[i]=a;
   }
