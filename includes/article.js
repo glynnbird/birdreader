@@ -3,6 +3,30 @@ var articles = require('./cloudant.js').articles;
 var moment = require('moment');
 
 // fetch unread articles from couchdb
+var singleUnreadArticle = function(callback) {
+  
+  // equivalent of CouchDB https://<server>:<port>/articles/_design/matching/_view/byts?limit=1&reduce=false&include_docs=true&descending=true&startkey=["unreadz"]&endkey=["unread"]
+  // N.B. when doing doing descending=true with startkey/endkey, you must also swap startkey/endkey(!)
+  articles.view('matching','byts', { limit: 1, reduce: false, include_docs: true, descending:true, startkey:["unread"+"z"],endkey: ["unread"]}, function(err,data) {
+    if(!err) {
+      var retval=[];
+      for(var i in data.rows) {
+        retval.push(data.rows[i].doc);
+
+        // write it back with read=true
+        var doc = data.rows[i].doc;
+        doc.read=true;
+        articles.insert(doc,function(err,data) {
+
+        });
+      }
+    }
+
+    callback(err,retval);
+  })
+}
+
+// fetch unread articles from couchdb
 var unreadArticles = function(callback) {
   
   // equivalent of CouchDB https://<server>:<port>/articles/_design/matching/_view/byts?limit=100&reduce=false&include_docs=true&descending=true&startkey=["unreadz"]&endkey=["unread"]
@@ -223,6 +247,7 @@ var purge = function(purgeBefore,callback) {
 }
 
 module.exports = {
+  singleUnreadArticle: singleUnreadArticle,
   unreadArticles: unreadArticles,
   readArticles: readArticles,
   starredArticles: starredArticles,

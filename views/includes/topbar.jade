@@ -9,6 +9,9 @@ div.navbar.navbar-inverse.navbar-fixed-top
       div.nav-collapse.collapse
         ul.nav
           li
+            a(href="/") Browse
+              span.label.label-success.ml5 #{stats.unread}
+          li
             a(href="/unread") Unread
               span.label.label-success.ml5 #{stats.unread}
           li

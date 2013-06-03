@@ -1,0 +1,32 @@
+div.article(id=article._id)
+  div.row
+    div.span1
+      if article.icon != null
+        img.bigicon(src=article.icon)
+    div.span10
+      div.feedName 
+        a.feedlink(href="/"+type+"/byfeed/"+escape(article.feedName.replace("/","%2F"))) @#{article.feedName}
+        if article.icon != null
+          img.miniicon(src=article.icon)
+        span.tags.ml10
+          each tag in article.tags  
+            a(href="/"+type+"/bytag/"+escape(tag.toLowerCase()))
+              span.label.mr10= tag
+      div.title= article.title
+    div.span1 
+      a(href="Javascript:loadNextArticle()")
+        span.label.label-success.p10 #{stats.unread}
+  div.row
+    div.span12.mt10
+      div.pb20(id="body"+article._id)
+        a.btn.btn-success.mr5(href=article.link,target='_blank') Go
+        - if (article.starred)
+          a.btn-warning.btn.mr5(id="star"+article._id,href="Javascript:unstarArticle('"+article._id+"')")
+            i.icon-star
+        - else
+          a.btn.mr5(id="star"+article._id,href="Javascript:starArticle('"+article._id+"')")
+            i.icon-star
+        a.btn.mr5(href="http://twitter.com/share?url="+article.link,target="_new",rel="nofollow") Twitter
+        a.btn.mr5(href="http://www.facebook.com/sharer.php?u="+article.link,target="_new",rel="nofollow") Facebook
+        div.mb10
+        div(id="description"+article._id)!= article.description

@@ -43,9 +43,20 @@ app.use(express.static(__dirname+'/public'));
 
 // home
 app.get('/', function(req, res) {
-  res.statusCode = 302;
-  res.setHeader('Location', '/unread');
-  res.end('This page has moved');
+  
+  async.parallel([
+    function(callback) {
+      article.stats(callback);
+    }
+  ], function(err,results) {
+ //   var articles = processArticles(results[1]);
+    res.render('browse.jade', { title: "Browse", type:"unread", stats:results[0], articles: [] } );
+  });
+  
+  
+ // res.statusCode = 302;
+  //res.setHeader('Location', '/unread');
+  //res.end('This page has moved');
 });
 
 
@@ -281,6 +292,27 @@ app.get("/api/unread/byfeed/:feed", function(req,res) {
 
 app.get("/api/starred/byfeed/:feed", function(req,res) {
   byFeedApi("starred",req,res);
+});
+
+app.get("/api/html/next", function(req,res) {
+  
+  async.parallel([
+    function(callback) {
+      article.stats(callback);
+    },
+    function(callback) {
+      article.singleUnreadArticle(callback);
+    }
+  ], function(err,results) {
+    var articles = processArticles(results[1]);
+    var article={};
+    if(articles.length>0) {
+      article = articles[0];
+    }
+    res.render('browsesingle.jade', { type:"unread", stats:results[0], article: article } );
+  });
+
+  
 });
 
 

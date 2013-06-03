@@ -88,3 +88,13 @@ var showAll = function() {
     readArticle(this.id);
   });
 }
+
+var loadNextArticle = function() {
+  $("#single").html("<h1>...</h1>");
+  $.ajax({
+    url: "/api/html/next",
+    cache: false
+  }).done(function( html ) {
+    $("#single").html(html);
+  });
+}
