@@ -1,4 +1,8 @@
 div.article(id=article._id)
+
+  div.pull-right
+      a(href="Javascript:loadNextArticle()")
+        span.label.label-success.p10 #{stats.unread}
   div.row
     div.span1
       if article.icon != null
@@ -13,9 +17,7 @@ div.article(id=article._id)
             a(href="/"+type+"/bytag/"+escape(tag.toLowerCase()))
               span.label.mr10= tag
       div.title= article.title
-    div.span1 
-      a(href="Javascript:loadNextArticle()")
-        span.label.label-success.p10 #{stats.unread}
+
   div.row
     div.span12.mt10
       div.pb20(id="body"+article._id)
