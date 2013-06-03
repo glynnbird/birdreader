@@ -33,6 +33,7 @@ BirdReader is designed to be installed on your own webserver or laptop, running 
 * - full-text search
 * - icons for feeds and articles
 * - expand all
+* - browse-mode - go through unread articles one-by-one, full screen
 * - [API](https://github.com/glynnbird/birdreader/blob/master/API.md). 
 
 ## How does it work?
@@ -142,6 +143,8 @@ The site is built with [Bootstrap](http://twitter.github.com/bootstrap/) so that
 
 
 ### Mobile Screenshot
+
+![mobile browse screenshot](https://github.com/glynnbird/birdreader/raw/master/public/images/mobilebrowse.png "Mobile Browse screenshot")
 
 ![mobile screenshot](https://github.com/glynnbird/birdreader/raw/master/public/images/mobile.png "Mobile screenshot")
 
