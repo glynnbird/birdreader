@@ -25,7 +25,7 @@ html(lang='en')
                 img.bigicon(src=article.icon)
             div.span11
               div.feedName 
-                a.feedlink(href="/"+type+"/byfeed/"+escape(article.feedName.replace("/","%2F"))) @#{article.feedName}
+                a.feedlink(href="/"+type+"/byfeed/"+escape(article.feedName?article.feedName.replace("/","%2F"):"+")) @#{article.feedName}
                 if article.icon != null
                   img.miniicon(src=article.icon)
                 span.tags.ml10
