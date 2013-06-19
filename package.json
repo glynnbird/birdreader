@@ -4,7 +4,7 @@
   "description": "Replacement for Google Reader",
   "main": "main.js",
   "dependencies": {
-    "feedparser": "0.16.1",
+    "feedparser": "0.13.3",
     "sax": "0.5.4",
     "request": "2.21.0",
     "moment": "2.0.0",
