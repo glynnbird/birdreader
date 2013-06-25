@@ -15,9 +15,9 @@ var singleUnreadArticle = function (callback) {
   articles.view('matching', 'byts', { limit: 1,
                                       reduce: false,
                                       include_docs: true,
-                                      descending: true,
-                                      startkey: ["unread" + "z"],
-                                      endkey: ["unread"]
+                                      descending: false,
+                                      startkey: ["unread"],
+                                      endkey: ["unread" + "z"]
                                     }, function (err, data) {
     if (!err) {
       retval = [];
