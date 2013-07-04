@@ -14,6 +14,14 @@ var articles = nano.db.use('articles');
 // async library
 var async = require('async');
 
+// set http max connections
+var http = require('http');
+http.globalAgent.maxSockets = 25;
+
+// set https max connections
+var https = require('https');
+https.globalAgent.maxSockets = 25;
+
 // create the feeds database
 var createFeeds = function (callback) {
   console.log("Checking feeds database");
