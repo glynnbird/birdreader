@@ -33,7 +33,7 @@ var fetchFeed = function (feed, callback) {
     headers = {'If-Modified-Since' : newerThan.format('ddd, DD MMM YYYY HH:mm:ss Z')},
     reqObj = { 'uri': feed.xmlUrl,
                  'headers': headers,
-                 'timeout': 5000 },
+                 'timeout': 20000 },
     articles = [],
     a = {},
     shasum = null,
@@ -41,6 +41,9 @@ var fetchFeed = function (feed, callback) {
 
   // parseString()
   request(reqObj, function (err, response, body) {
+    if (err) {
+      return;
+    }
     feedparser.parseString(body)
       .on('article', function (data) {
         a = {};
@@ -121,7 +124,7 @@ var fetchArticles = function (callback) {
         if (bigresults.length > 0) {
           articles.bulk({"docs": bigresults}, function (err, d) {
             console.log("Written ", bigresults.length, " articles");
-            console.log(bigresults);
+            //console.log(bigresults);
           });
         }
 
