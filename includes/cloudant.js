@@ -104,12 +104,15 @@ var compact = function (callback) {
 
 };
 
-// create some databases
-async.series([createFeeds, createArticles, createViews]);
+// create some databases and their views
+var create = function (cb) {
+  async.series([createFeeds, createArticles, createViews], cb);
+};
 
 module.exports = {
   feeds: feeds,
   articles: articles,
   createViews: createViews,
-  compact: compact
+  compact: compact,
+  create: create
 };

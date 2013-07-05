@@ -36,6 +36,13 @@ setInterval(function () {
   });
 }, 1000 * 60 * 5);
 
+// fetch articles on start, after db & views are created
+cloudant.create(function() {
+  feed.fetchArticles(function (err, results) {
+    console.log("Fetched articles");
+  });
+});
+
 // compact the databases every 24 hours
 setInterval(function () {
   cloudant.compact(function (err, data) {
