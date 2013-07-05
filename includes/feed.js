@@ -165,6 +165,10 @@ var add = function (url, callback) {
     feed.tags = [];
     feed.lastModified = moment().format('YYYY-MM-DD HH:mm:ss Z');
 
+    if (!data.links) {
+      return callback(false, { success: false, message: "Could not add feed for " + url});
+    }
+    
     // look for matching link tags
     for (i = 0; i < data.links.length; i++) {
       if (typeof data.links[i].type !== "undefined") {
