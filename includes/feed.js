@@ -112,7 +112,7 @@ var fetchArticles = function (callback) {
     }
 
     // perform fetches in parallel
-    async.parallel(functions, function (err, results) {
+    async.parallelLimit(functions, 25, function (err, results) {
       if (!err) {
         // concat all the results arrays into bigresults
         bigresults = [];
@@ -136,7 +136,7 @@ var fetchArticles = function (callback) {
 
       callback(err, results);
 
-    }, 25);
+    });
 
   });
 };
