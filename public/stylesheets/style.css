@@ -24,6 +24,7 @@
   box-shadow: 0 0 5px #888;
   margin-top:10px;
   padding:10px;
+  overflow: hidden;
 }
 
 .tobeshown {
