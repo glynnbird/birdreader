@@ -33,7 +33,7 @@ var fetchFeed = function (feed, callback) {
     headers = {'If-Modified-Since' : newerThan.format('ddd, DD MMM YYYY HH:mm:ss Z')},
     reqObj = { 'uri': feed.xmlUrl,
                  'headers': headers,
-                 'timeout': 20000 },
+                 'timeout': 30000 },
     articles = [],
     a = {},
     shasum = null,
@@ -42,7 +42,7 @@ var fetchFeed = function (feed, callback) {
   // parseString()
   request(reqObj, function (err, response, body) {
     if (err) {
-      return;
+      return callback(err,articles);
     }
     feedparser.parseString(body)
       .on('article', function (data) {
