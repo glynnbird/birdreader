@@ -7,6 +7,7 @@ var moment = require('moment');
 var extractor = require('extractor');
 var favicon = require('./favicon.js');
 var crypto = require('crypto');
+var u = require('url');
 
 // read all the feeds from Cloudant
 var readAll = function (callback) {
@@ -192,7 +193,19 @@ var add = function (url, callback) {
 
     // if we have found a feed
     if (feed.xmlUrl) {
-
+      
+      // for relative to protocol xmlUrl path <//server.com/rss>
+      if (/^\/\/(.*)/.test(feed.xmlUrl)) {
+        feed.xmlUrl = u.parse(feed.htmlUrl).protocol + feed.xmlUrl;
+      } else {
+        // for relative to site root xmlUrl path </rss>
+        if(/^\/(.*)/.test(feed.xmlUrl)) {
+          // parsed Page Url
+          var pu = u.parse(feed.htmlUrl);
+          feed.xmlUrl = pu.protocol + '//' + pu.host + feed.xmlUrl;
+        }
+      }
+      
       // see if we can find a favicon
       favicon.find(feed.htmlUrl, function (faviconUrl) {
 
