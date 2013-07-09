@@ -30,7 +30,7 @@ BirdReader is designed to be installed on your own webserver or laptop, running 
 * - basic HTTP authentication (optional)
 * - filter read/unread/starred streams by tag
 * - filter read/unread/starred streams by feed
-* - full-text search
+* - full-text search (only works when using Cloudant as the CouchDB storage engine)
 * - icons for feeds and articles
 * - expand all
 * - browse-mode - go through unread articles one-by-one, full screen
@@ -123,9 +123,10 @@ allows us to get unread articles tagged by "BBC" in newest first order, for exam
 
 ### Full-text search
 
-BirdRead supports full-text search of articles by utilising Cloudant's full-text capability. A Lucene index is created to allow the articles' titles
-and descriptions to searchable. A simple form on the top bar allows the user to search the collected articles with ease. N.B if you are using a 
-non-Cloudant backend (e.g. plain CouchDB), then the search facility will not work.
+BirdReader supports full-text search of articles by utilising [Cloudant's full-text capability](https://cloudant.com/for-developers/search/). 
+A Lucene index is created to allow the articles' titles and descriptions to searchable. A simple form on the top bar 
+allows the user to search the collected articles with ease. N.B if you are using a non-Cloudant backend (e.g. plain 
+CouchDB), then the search facility will not work.
 
 ### Scraping articles
 
@@ -161,8 +162,8 @@ The site is built with [Bootstrap](http://twitter.github.com/bootstrap/) so that
 
 ## Installation
 
-You will need Node.js and npm installed on your computer (version 0.8.x or version 0.10.x). Unpack the BirdReader repository and i
-nstall its dependencies e.g.
+You will need Node.js and npm installed on your computer (version 0.8.x or version 0.10.x). Unpack the BirdReader 
+repository and install its dependencies e.g.
 
 ```
   git clone git@github.com:glynnbird/birdreader.git
@@ -195,7 +196,7 @@ See the website by pointing your browser to port 3000:
 You can export your Google Reader subscriptions using [Google Takeout](https://www.google.com/takeout/). Download the file, unpack it 
 and locate the subscriptions.xml file.
 
-You can import this into BirdReader with
+You can import this into BirdReader with:
 
 ```
   node import_opml.js subscriptions.xml
@@ -242,7 +243,7 @@ BirdReader has been tested on a Mac, Amazon EC2 and Raspberry Pi. [Benchmarks he
 When a feed is added to BirdReader, we attempt to get an "icon" for the feed based on the "Favicon" of the blog. This is stored in the feeds 
 database and every article that is fetched subsequently, inherits the feed's icon.
 
-This feature was added after to launch. To retro-fit icons to your existing feeds, run:
+This feature was added after launch. To retro-fit icons to your existing feeds, run:
 
 ```
   node retrofit_favicons.js
