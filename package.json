@@ -4,9 +4,9 @@
   "description": "Replacement for Google Reader",
   "main": "main.js",
   "dependencies": {
-    "feedparser": "0.13.3",
+    "feedparser": "0.16.1",
     "sax": "0.5.4",
-    "request": "2.21.0",
+    "request": "2.22.0",
     "moment": "2.0.0",
     "nano": "git://github.com/touchlocal/nano.git#3.3.3b",
     "optimist": "0.5.2",

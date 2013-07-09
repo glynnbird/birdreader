@@ -2,7 +2,7 @@ var feeds = require('./cloudant.js').feeds;
 var articles = require('./cloudant.js').articles;
 var async = require('async');
 var request = require('request');
-var feedparser = require('feedparser');
+var FeedParser = require('feedparser');
 var moment = require('moment');
 var extractor = require('extractor');
 var favicon = require('./favicon.js');
@@ -25,6 +25,7 @@ var readAll = function (callback) {
   });
 };
 
+// fetch 'feed' and callback when done, passing (err, articles)
 var fetchFeed = function (feed, callback) {
 
   // only get articles newer than this feed's newest article
@@ -33,19 +34,32 @@ var fetchFeed = function (feed, callback) {
     headers = {'If-Modified-Since' : newerThan.format('ddd, DD MMM YYYY HH:mm:ss Z')},
     reqObj = { 'uri': feed.xmlUrl,
                  'headers': headers,
-                 'timeout': 30000 },
+                 'timeout': 30000,
+                 'strictSSL': false },
     articles = [],
     a = {},
     shasum = null,
-    m = null;
+    m = null,
+    stream = null,
+    data = null;
 
-  // parseString()
-  request(reqObj, function (err, response, body) {
-    if (err) {
-      return callback(err,articles);
-    }
-    feedparser.parseString(body)
-      .on('article', function (data) {
+  // use request to fetch the feed and pipe the stream to FeedParser
+  request(reqObj)
+    .on('error',function(e){
+       // this is an error from request e.g. DNS error
+       console.log("Failed to connect to ",reqObj.uri);
+       return callback(e,articles);
+    })
+    .pipe(new FeedParser({}))
+    .on('error', function(err) {
+      // this is an error from FeedParser e.g. parse error
+      //console.log("parse error", reqObj.uri)
+    })
+    .on('readable', function () {
+      // we have one or more articles to parse
+      stream = this;
+      data = null;
+      while (data = stream.read()) {
         a = {};
         // use a hash of the articles's url as the document id - to prevent duplicates
         if (typeof data.link === 'string') {
@@ -76,24 +90,17 @@ var fetchFeed = function (feed, callback) {
             }
           }
         }
+      }
 
-      })
-      .on('end', function () {
-        feed.lastModified = latest.format('YYYY-MM-DD HH:mm:ss Z');
-        callback(null, articles);
-      })
-      .on('error', function (error) {
-      });
-  });
+    })
+    .on('end', function() {
 
-};
-
-var addToSpider = function (feed, functions) {
-  functions.push(function (cb) {
-    fetchFeed(feed, function (err, data) {
-      cb(null, data);
+      // update last modified date of the feed and return the found articles
+      feed.lastModified = latest.format('YYYY-MM-DD HH:mm:ss Z');
+      return callback(null, articles);
+      
     });
-  });
+    
 };
 
 // fetch all the articles from all the feeds
@@ -106,9 +113,19 @@ var fetchArticles = function (callback) {
 
   // load all articles from Cloudant
   readAll(function (allFeeds) {
-
+    
+    // for each feed
     for (i = 0; i < allFeeds.length; i++) {
-      addToSpider(allFeeds[i], functions);
+      
+      // create a closure to feed to create a functions array of work to do in parallel
+      (function (feed) {
+        functions.push(function (cb) {
+          fetchFeed(feed, function (err, data) {
+            cb(null, data);
+          });
+        });
+      })(allFeeds[i]);
+      
     }
 
     // perform fetches in parallel
@@ -119,7 +136,7 @@ var fetchArticles = function (callback) {
         for (r = 0; r < results.length; r++) {
           bigresults = bigresults.concat(results[r]);
         }
-
+        
         // write the articles to the database
         if (bigresults.length > 0) {
           articles.bulk({"docs": bigresults}, function (err, d) {
@@ -132,9 +149,9 @@ var fetchArticles = function (callback) {
         feeds.bulk({"docs": allFeeds}, function (err, d) {
         //           console.log("Written ",allFeeds.length," feeds");
         });
+        callback(err, results);
       }
-
-      callback(err, results);
+      
 
     });
 
