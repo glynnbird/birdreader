@@ -3,6 +3,9 @@ head
   meta(name='viewport',content='width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0')
   meta(name="apple-mobile-web-app-capable",content="yes")
   title BirdReader - #{title}
+  -if (typeof base !== 'undefined') {
+  base(href='#{base}')
+  -}
   link(rel='stylesheet',href='bootstrap/css/bootstrap.min.css')
   link(rel='stylesheet',href='bootstrap/css/bootstrap-responsive.min.css')
   link(rel='stylesheet',href='stylesheets/style.css')

@@ -25,12 +25,12 @@ html(lang='en')
                 img.bigicon(src=article.icon)
             div.span11
               div.feedName 
-                a.feedlink(href="/"+type+"/byfeed/"+escape(article.feedName?article.feedName.replace("/","%2F"):"+")) @#{article.feedName}
+                a.feedlink(href=type+"/byfeed/"+escape(article.feedName?article.feedName.replace("/","%2F"):"+")) @#{article.feedName}
                 if article.icon != null
                   img.miniicon(src=article.icon)
                 span.tags.ml10
                   each tag in article.tags  
-                    a(href="/"+type+"/bytag/"+escape(tag.toLowerCase()))
+                    a(href=type+"/bytag/"+escape(tag.toLowerCase()))
                       span.label.mr10= tag
               div.title
                 a(href="Javascript:readArticle('"+article._id+"')")= article.title

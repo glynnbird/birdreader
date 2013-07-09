@@ -12,7 +12,7 @@ html(lang='en')
         p 
         p #{feeds.length} feeds
         p 
-        a.btn.btn-large.btn-success(href="/add") Add Feed
+        a.btn.btn-large.btn-success(href="add") Add Feed
         div.spacer
       
       ol
@@ -23,7 +23,7 @@ html(lang='en')
                 if feed.icon != null
                   img.favicon(src=feed.icon)
               div.span8
-                a.feedName(href="/feed/"+feed._id) @#{feed.title}
+                a.feedName(href="feed/"+feed._id) @#{feed.title}
                 div.tags
                   each tag in feed.tags  
                     span.label.mr10= tag
