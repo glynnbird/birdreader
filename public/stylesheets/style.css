@@ -1,6 +1,6 @@
 
 .readerlogo {
-  background: transparent url('/images/icon.png') no-repeat;
+  background: transparent url('../images/icon.png') no-repeat;
   padding-left:40px;
   padding-top:8px;
   display: block;

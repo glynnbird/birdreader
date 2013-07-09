@@ -403,6 +403,7 @@ app.get('/feed/:id', function (req, res) {
     }
   ], function (err, results) {
     res.render('feed.jade', { title: 'Feed',
+                              base: '../',
                               feed: results[1],
                               stats: results[0],
                               id: req.params.id
@@ -464,6 +465,7 @@ var byTag = function (type, req, res) {
   ], function (err, results) {
     articles = processArticles(results[1]);
     res.render('index.jade', { title: type + ' by tag ' + tag,
+                               base: '../../',
                                type: type,
                                stats: results[0],
                                articles: articles
@@ -497,6 +499,7 @@ var byFeed = function (type, req, res) {
   ], function (err, results) {
     articles = processArticles(results[1]);
     res.render('index.jade', { title: type + ' by feed ' + feed,
+                               base: '../../',
                                type: type,
                                stats: results[0],
                                articles: articles

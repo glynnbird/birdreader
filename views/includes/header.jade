@@ -3,18 +3,21 @@ head
   meta(name='viewport',content='width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0')
   meta(name="apple-mobile-web-app-capable",content="yes")
   title BirdReader - #{title}
-  link(rel='stylesheet',href='/bootstrap/css/bootstrap.min.css')
-  link(rel='stylesheet',href='/bootstrap/css/bootstrap-responsive.min.css')
-  link(rel='stylesheet',href='/stylesheets/style.css')
+  -if (typeof base !== 'undefined') {
+  base(href='#{base}')
+  -}
+  link(rel='stylesheet',href='bootstrap/css/bootstrap.min.css')
+  link(rel='stylesheet',href='bootstrap/css/bootstrap-responsive.min.css')
+  link(rel='stylesheet',href='stylesheets/style.css')
   // Le HTML5 shim, for IE6-8 support of HTML5 elements
   //[if lt IE 9]
-  script(src='http://html5shim.googlecode.com/svn/trunk/html5.js')
+  script(src='https://html5shim.googlecode.com/svn/trunk/html5.js')
   //[endif]
   script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')
-  script(src='/javascript/reader.js')
+  script(src='javascript/reader.js')
   // Le fav and touch icons
-  link(rel='shortcut icon',href='/images/icon144.png')
-  link(rel='apple-touch-icon-precomposed',sizes='144x144',href='/images/icon144.png')
-  link(rel='apple-touch-icon-precomposed',sizes='114x114',href='/images/icon114.png')
-  link(rel='apple-touch-icon-precomposed',sizes='72x72',href='/images/icon72.png')
-  link(rel='apple-touch-icon-precomposed',href='/images/icon57.png')
+  link(rel='shortcut icon',href='images/icon144.png')
+  link(rel='apple-touch-icon-precomposed',sizes='144x144',href='images/icon144.png')
+  link(rel='apple-touch-icon-precomposed',sizes='114x114',href='images/icon114.png')
+  link(rel='apple-touch-icon-precomposed',sizes='72x72',href='images/icon72.png')
+  link(rel='apple-touch-icon-precomposed',href='images/icon57.png')
