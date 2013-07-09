@@ -1,8 +1,8 @@
 ## Introduction
 
-BirdReader is installable on any unix-like machine that can run Node.js 0.8.x or 0.10.x and an internet connection. My BirdReader server is an
-Amazon EC2 "micro" server which is free. You can also install it on your local Mac, PC or Ubuntu machine. Or you could install it on a 
-Raspberry Pi. I need to test this last claim
+BirdReader is installable on any unix-like machine that can run Node.js 0.8.x or 0.10.x with an internet connection. My BirdReader server is an
+Amazon EC2 "micro" server which is [free](http://aws.amazon.com/free/). You can also install it on your local Mac, PC or Ubuntu machine. 
+Or you could install it on a Raspberry Pi. I needed to test this last claim.
 
 ## Installing Node.js on Raspberry Pi
 
@@ -14,7 +14,7 @@ $ make
 $ sudo make install
 ```
 
-## Install BirsdReader
+## Install BirdReader
 
 ```
 cd ~
