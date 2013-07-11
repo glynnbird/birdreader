@@ -88,6 +88,10 @@ var trimByWord = function (sentence, n) {
 // calculate diff string for list of articles
 var processArticles = function (articles) {
 
+  if(typeof articles == 'undefined') {
+    return [];
+  }
+  
   var now = moment(),
     i = 0,
     a = null,
