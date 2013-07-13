@@ -1,22 +1,9 @@
-!!! 5
-html(lang='en')  
-  include includes/header
-  body 
+h2 Add a feed
 
-    include includes/topbar                                             
-    
-    div.container
+div#addfeedback
 
-      h1 Add a feed
-      
-      div#addfeedback
-      
-      form(onsubmit='return addFeed()')
-        label(for='url') URL
-        input(id='url',type='text',name='url')
-        div.spacer
-        input(type='submit',value='Add')
-
-
- 
-    include includes/footer
+form(onsubmit='return addFeed()')
+  label(for='url') URL
+  input(id='url',type='text',name='url')
+  div.spacer
+  input(type='submit',value='Add')
