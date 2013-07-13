@@ -6,6 +6,7 @@ div.navbar.navbar-inverse.navbar-fixed-top
         span.icon-bar
         span.icon-bar
       a.readerlogo.mr40(href='#!/browse') &nbsp; BirdReader
+        span#connected 
       div.nav-collapse.collapse
         ul.nav
           li
@@ -25,5 +26,7 @@ div.navbar.navbar-inverse.navbar-fixed-top
           li
             form.navbar-search.pull-left(action="/#!/search",method="get",onsubmit="return searchRedirect()")
               input.search-query(id="keywords",name="keywords",type="text",placeholder="Search")
+
+
 
 

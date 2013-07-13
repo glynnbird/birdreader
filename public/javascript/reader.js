@@ -216,9 +216,12 @@ $(document).ready(function () {
       $('#browsemodecount').html(data.unread);
     }
   });
+  
   socket.on('connect', function () {
+    $('#connected').html("<i class='icon-star icon-white'></i>");
   });
   socket.on('disconnect', function () {
+    $('#connected').html("<i class='icon-star-empty icon-white'></i>");
   });
   
 });
