@@ -14,6 +14,7 @@ var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
+io.set('log level', 1); // reduce logging
 var socketio_socket = null;
 
 // listen on port 3000
@@ -84,7 +85,7 @@ var getStats = function (callback) {
     if(!err) {
       var keys = ['unread', 'read', 'starred'];
       for(var i = 0; i < keys.length; i++ ) {
-        if(typeof retval[keys[i]] == '  ') {
+        if(typeof retval[keys[i]] == 'undefined') {
           retval[keys[i]] = 0;
         }
       }
