@@ -4,7 +4,7 @@ if !!article._id
 
     div.pull-right
         a(href="Javascript:loadNextArticle()")
-          span.label.label-success.p10 #{stats.unread}
+          span#browsemodecount.label.label-success.p10 #{stats.unread}
     div.row
       div.span1
         if article.icon != null

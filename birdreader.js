@@ -12,6 +12,13 @@ var moment = require('moment');
 // we need the express framework
 var express = require('express');
 var app = express();
+var server = require('http').createServer(app);
+var io = require('socket.io').listen(server);
+var socketio_socket = null;
+
+// listen on port 3000
+server.listen(3000);
+
 
 // async library
 var async = require('async');
@@ -33,6 +40,8 @@ if (config.purgeArticles && config.purgeArticles.on && config.purgeArticles.purg
 setInterval(function () {
   feed.fetchArticles(function (err, results) {
     console.log("Fetched articles");
+    getStats(function (err, data) {   
+    });
   });
 }, 1000 * 60 * 5);
 
@@ -40,6 +49,8 @@ setInterval(function () {
 cloudant.create(function() {
   feed.fetchArticles(function (err, results) {
     console.log("Fetched articles");
+    getStats(function (err, data) {
+    });
   });
 });
 
@@ -59,12 +70,40 @@ app.use(express.compress());
 // server out our static directory as static files
 app.use(express.static(__dirname + '/public'));
 
+
+// send latest totals to the client via socket.io
+var realtimeStatsUpdate = function(stats) {
+  if (socketio_socket) {
+    socketio_socket.emit('news', stats);
+  }
+}
+
+// fetch the stats, send via socket.io 
+var getStats = function (callback) {
+  article.stats(function (err, retval) {
+    if(!err) {
+      var keys = ['unread', 'read', 'starred'];
+      console.log(retval);
+      for(var i = 0; i < keys.length; i++ ) {
+        if(typeof retval[keys[i]] == '  ') {
+          retval[keys[i]] = 0;
+        }
+      }
+      realtimeStatsUpdate(retval);
+      callback(err, retval);
+    } else {
+      callback(true, {});
+    }
+
+  });
+}
+
 // home
 app.get('/', function (req, res) {
 
   async.parallel([
     function (callback) {
-      article.stats(callback);
+      getStats(callback);
     }
   ], function (err, results) {
     res.render('browse.jade', { title: "Browse", type: "unread", stats: results[0], articles: [] });
@@ -142,7 +181,7 @@ app.get('/unread', function (req, res) {
 
   async.parallel([
     function (callback) {
-      article.stats(callback);
+      getStats(callback);
     },
     function (callback) {
       article.unreadArticles(callback);
@@ -164,7 +203,7 @@ app.get('/read', function (req, res) {
 
   async.parallel([
     function (callback) {
-      article.stats(callback);
+      getStats(callback);
     },
     function (callback) {
       article.readArticles(callback);
@@ -185,7 +224,7 @@ app.get('/starred', function (req, res) {
   var articles = [];
   async.parallel([
     function (callback) {
-      article.stats(callback);
+      getStats(callback);
     },
     function (callback) {
       article.starredArticles(callback);
@@ -205,7 +244,7 @@ app.get('/search', function (req, res) {
   var articles = [];
   async.parallel([
     function (callback) {
-      article.stats(callback);
+      getStats(callback);
     },
     function (callback) {
       article.search(req.query.keywords, callback);
@@ -346,7 +385,7 @@ app.get("/api/html/next", function (req, res) {
 
   async.parallel([
     function (callback) {
-      article.stats(callback);
+      getStats(callback);
     },
     function (callback) {
       article.singleUnreadArticle(callback);
@@ -370,7 +409,7 @@ app.get("/api/html/next", function (req, res) {
 app.get('/add', function (req, res) {
 
   // fetch the article stats
-  article.stats(function (err, stats) {
+  getStats(function (err, stats) {
 
     // render the page
     res.render('addform.jade', {title: 'Add', stats: stats});
@@ -382,7 +421,7 @@ app.get('/add', function (req, res) {
 app.get('/feeds', function (req, res) {
 
   // fetch the article stats
-  article.stats(function (err, stats) {
+  getStats(function (err, stats) {
     // fetch the article stats
     feed.readAll(function (feeds) {
 
@@ -398,7 +437,7 @@ app.get('/feed/:id', function (req, res) {
 
   async.parallel([
     function (callback) {
-      article.stats(callback);
+      getStats(callback);
     },
     function (callback) {
       feed.get(req.params.id, function (err, data) {
@@ -461,7 +500,7 @@ var byTag = function (type, req, res) {
 
   async.parallel([
     function (callback) {
-      article.stats(callback);
+      getStats(callback);
     },
     function (callback) {
       article.articlesByTag(type, tag, callback);
@@ -495,7 +534,7 @@ var byFeed = function (type, req, res) {
 
   async.parallel([
     function (callback) {
-      article.stats(callback);
+      getStats(callback);
     },
     function (callback) {
       article.articlesByFeed(type, feed, callback);
@@ -523,8 +562,20 @@ app.get("/starred/byfeed/:feed", function (req, res) {
   byFeed("starred", req, res);
 });
 
-// listen on port 3000
-app.listen(3000);
+
+io.sockets.on('connection', function (socket) {
+  socketio_socket = socket;
+  console.log("socket.io connection");
+  //socket.emit('news', { hello: 'world' });
+ /* socket.on('my other event', function (data) {
+    console.log(data);
+  });*/
+  socketio_socket.on('disconnect', function() {
+    console.log("socket.io disconnection");
+    socketio_socket = null;
+  });
+});
+
 console.log('Listening on port 3000');
 
 

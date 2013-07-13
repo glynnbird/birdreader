@@ -13,6 +13,7 @@
     "async": "0.2.9",
     "express": "3.2.6",
     "jade": "0.28.2",
-    "extractor": "0.1.2"
+    "extractor": "0.1.2",
+    "socket.io": "0.9.16"
   }
 }

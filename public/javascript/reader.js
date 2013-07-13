@@ -98,3 +98,25 @@ var loadNextArticle = function() {
     $("#single").html(html);
   });
 }
+
+$(document).ready(function () { 
+  var socket = io.connect(window.location.hostname);
+  socket.on('news', function (data) {
+    console.log("INCOMING DATA",data);
+    $('#browsecount').html(data.unread);
+    $('#unreadcount').html(data.unread);
+    $('#readcount').html(data.read); 
+    $('#starredcount').html(data.starred); 
+    if($('browsemodecount')) {
+      $('browsemodecount').html(data.unread);
+    }
+    console.log("WRITTEN updated stats");
+  });
+  socket.on('connect', function () {
+    console.log("SOCKET CONNECTED");
+  });
+  socket.on('disconnect', function () {
+    console.log("SOCKET DISCONNECTED");
+  });
+  
+});
