@@ -15,7 +15,7 @@ var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
 io.set('log level', 1); // reduce logging
-var socketio_socket = null;
+
 
 // listen on port 3000
 server.listen(3000);
@@ -74,9 +74,7 @@ app.use(express.static(__dirname + '/public'));
 
 // send latest totals to the client via socket.io
 var realtimeStatsUpdate = function(stats) {
-  if (socketio_socket) {
-    socketio_socket.emit('news', stats);
-  }
+  io.sockets.emit('news', stats);
 }
 
 // fetch the stats, send via socket.io 
@@ -462,15 +460,11 @@ app.get('/api/feed/:id/remove', function (req, res) {
 
 
 io.sockets.on('connection', function (socket) {
-  socketio_socket = socket;
 
   // send latest stats on connection
   getStats(function(err,data) {
   });
   
-  socketio_socket.on('disconnect', function() {
-    socketio_socket = null;
-  });
 });
 
 console.log('Listening on port 3000');
