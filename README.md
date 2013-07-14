@@ -34,7 +34,19 @@ BirdReader is designed to be installed on your own webserver or laptop, running 
 * - icons for feeds and articles
 * - expand all
 * - browse-mode - go through unread articles one-by-one, full screen
-* - [API](https://github.com/glynnbird/birdreader/blob/master/API.md). 
+* - [API](https://github.com/glynnbird/birdreader/blob/master/API.md)
+* - live stats via WebSockets (NEW!)
+
+As of July 2013, the web client also makes a [WebSockets](http://en.wikipedia.org/wiki/WebSocket) connection
+back to the server so that when new articles are added to the database, then the numbers of read, unread
+and starred articles can be 'pushed' to the server, without the client having to poll. This also offers
+other advantages
+
+* when fetching an article or list of articles, we no longer have to also fetch the article counts, making fetches faster
+* article counts arrive at the client asynchronously
+* article counts are always up to date
+* url scheme has changed to a 'hash-bang' scheme, so that all page updates are via Ajax, to prevent frequent disconnection 
+of the WebSocket and to reduce network traffic
 
 ## How does it work?
 
