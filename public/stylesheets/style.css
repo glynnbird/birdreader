@@ -176,8 +176,10 @@ h1 {
     font-size:13px;
 }
 
-.mt40 {
-  margin-top: 50px;
+@media (min-width: 769px) {
+  .mt40 {
+    margin-top: 50px;
+  }
 }
 
 .mt10 {

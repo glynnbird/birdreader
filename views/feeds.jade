@@ -1,32 +1,19 @@
-!!! 5
-html(lang='en')  
-  include includes/header
-  body 
 
-    include includes/topbar                                             
-    
-    div.container
+div
+  h2 #{title} (#{feeds.length}) &nbsp;
+    a.btn.btn-medium.btn-success(href="#!/add") Add Feed
+  div.spacer
 
-      div.hero-unit
-        h1 #{title}
-        p 
-        p #{feeds.length} feeds
-        p 
-        a.btn.btn-large.btn-success(href="add") Add Feed
-        div.spacer
-      
-      ol
-        each feed in feeds
-          li(id=feed._id)
-            div.feed
-              div.span1
-                if feed.icon != null
-                  img.favicon(src=feed.icon)
-              div.span8
-                a.feedName(href="feed/"+feed._id) @#{feed.title}
-                div.tags
-                  each tag in feed.tags  
-                    span.label.mr10= tag
+ol
+  each feed in feeds
+    li(id=feed._id)
+      div.feed
+        div.span1
+          if feed.icon != null
+            img.favicon(src=feed.icon)
+        div.span8
+          a.feedName(href="#!/feed?feed_id="+escape(feed._id)) @#{feed.title}
+          div.tags
+            each tag in feed.tags  
+              span.label.mr10= tag
 
- 
-    include includes/footer

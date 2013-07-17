@@ -34,7 +34,21 @@ BirdReader is designed to be installed on your own webserver or laptop, running 
 * - icons for feeds and articles
 * - expand all
 * - browse-mode - go through unread articles one-by-one, full screen
-* - [API](https://github.com/glynnbird/birdreader/blob/master/API.md). 
+* - [API](https://github.com/glynnbird/birdreader/blob/master/API.md)
+* - live stats via WebSockets (NEW!)
+
+As of July 2013, the web client also makes a [WebSockets](http://en.wikipedia.org/wiki/WebSocket) connection
+back to the server so that when new articles are added to the database, then the numbers of read, unread
+and starred articles can be 'pushed' to the server, without the client having to poll. This also offers
+other advantages
+
+* when fetching an article or list of articles, we no longer have to also fetch the article counts, making fetches faster
+* article counts arrive at the client asynchronously
+* article counts are always up to date
+* url scheme has changed to a '[hash-bang](http://en.wikipedia.org/wiki/Fragment_identifier)' scheme, so that all page 
+updates are via Ajax, to prevent frequent disconnection of the WebSocket and to reduce network traffic
+
+N.B if you have previous installation of BirdReader, you will have to run 'npm install' to pick up the socket.io package.
 
 ## How does it work?
 
@@ -159,6 +173,7 @@ The site is built with [Bootstrap](http://twitter.github.com/bootstrap/) so that
 * [Bootstrap](http://twitter.github.com/bootstrap/) - Twitter responsive HTML framework
 * [sax](https://npmjs.org/package/sax) - XML parser for Node.js
 * [extractor](https://npmjs.org/package/extractor) - HTML scraper, to find RSS links in HTML pages
+* [socket-io](http://socket.io/) - WebSockets library
 
 ## Installation
 

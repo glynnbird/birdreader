@@ -78,7 +78,7 @@ var removeTag = function(feedid, tag) {
 
 var removeFeed = function(feedid) {
   $.getJSON("api/feed/"+feedid+"/remove",  function(retval) {
-    location.href="/feeds";
+    location.href="#!/feeds";
   })
   return false;
 }
@@ -89,12 +89,182 @@ var showAll = function() {
   });
 }
 
-var loadNextArticle = function() {
-  $("#single").html("<h1>...</h1>");
+var doBrowse = function() {
+  $("#target").html("<h1>...</h1>");
   $.ajax({
     url: "api/html/next",
     cache: false
   }).done(function( html ) {
-    $("#single").html(html);
+    $("#target").html(html);
+    $('#browsemodecount').html(latest_unread);
   });
 }
+
+var doUnread = function() {
+  $("#target").html("<h1>...</h1>");
+  var bits = window.location.href.split("?");
+  var data = "";
+  if(bits.length > 0) {
+    data = bits[1];
+  }
+  $.ajax({
+    url: "api/html/unread",
+    cache: false,
+    data: data
+  }).done(function( html ) {
+    $("#target").html(html);
+  });
+}
+
+var doRead = function() {
+  $("#target").html("<h1>...</h1>");
+  var bits = window.location.href.split("?");
+  var data = "";
+  if(bits.length > 0) {
+    data = bits[1];
+  }
+  $.ajax({
+    url: "api/html/readed",
+    cache: false,
+    data: data
+  }).done(function( html ) {
+    $("#target").html(html);
+  });
+}
+
+var doStarred = function() {
+  $("#target").html("<h1>...</h1>");
+  var bits = window.location.href.split("?");
+  var data = "";
+  if(bits.length > 0) {
+    data = bits[1];
+  }
+  $.ajax({
+    url: "api/html/starred",
+    cache: false,
+    data: data
+  }).done(function( html ) {
+    $("#target").html(html);
+  });
+}
+
+var doFeeds = function() {
+  $("#target").html("<h1>...</h1>");
+  $.ajax({
+    url: "api/html/feeds",
+    cache: false
+  }).done(function( html ) {
+    $("#target").html(html);
+  });
+}
+
+var doSingleFeed = function() {
+  $("#target").html("<h1>...</h1>");
+  var bits = window.location.href.split("?");
+  var data = "";
+  if(bits.length > 0) {
+    data = bits[1];
+  }
+  $.ajax({
+    url: "api/html/feed",
+    cache: false,
+    data: data
+  }).done(function( html ) {
+    $("#target").html(html);
+  });
+}
+
+var doSearch = function() {
+  $("#target").html("<h1>...</h1>");
+  var bits = window.location.href.split("?");
+  var data = "";
+  if(bits.length > 0) {
+    data = bits[1];
+  }
+  $.ajax({
+    url: "api/html/search",
+    cache: false,
+    data: data
+  }).done(function( html ) {
+    $("#target").html(html);
+  });
+};
+
+var doAddForm = function() {
+  $("#target").html("<h1>...</h1>");
+  $.ajax({
+    url: "api/html/add",
+    cache: false
+  }).done(function( html ) {
+    $("#target").html(html);
+  });
+}
+
+var searchRedirect = function() {
+  var url = "#!/search?keywords=" + escape($('#keywords').val());
+  window.location = url;
+  return false;
+}
+
+var latest_unread = '0';
+
+$(document).ready(function () { 
+  var socket = io.connect(window.location.hostname);
+  socket.on('news', function (data) {
+    latest_unread = data.unread;
+    $('#browsecount').html(data.unread);
+    $('#unreadcount').html(data.unread);
+    $('#readcount').html(data.read); 
+    $('#starredcount').html(data.starred); 
+    if($('#browsemodecount')) {
+      $('#browsemodecount').html(data.unread);
+    }
+  });
+  
+  socket.on('connect', function () {
+    $('#connected').html("<i class='icon-star icon-white'></i>");
+  });
+  socket.on('disconnect', function () {
+    $('#connected').html("<i class='icon-star-empty icon-white'></i>");
+  });
+  
+});
+
+
+Path.map("#!/browse").to(function(){
+  doBrowse();
+});
+
+Path.map("#!/unread").to(function(){
+  doUnread();
+});
+
+Path.map("#!/read").to(function(){
+  doRead();
+});
+
+Path.map("#!/starred").to(function(){
+  doStarred();
+});
+
+Path.map("#!/feeds").to(function(){
+  doFeeds();
+});
+
+Path.map("#!/search").to(function(){
+  doSearch();
+});
+
+Path.map("#!/add").to(function(){
+  doAddForm();
+});
+
+Path.map("#!/feed").to(function(){
+  doSingleFeed();
+});
+
+Path.root("#!/browse");
+
+Path.listen();
+
+

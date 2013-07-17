@@ -3,21 +3,21 @@ if !!article._id
   div.article(id=article._id)
 
     div.pull-right
-        a(href="Javascript:loadNextArticle()")
-          span.label.label-success.p10 #{stats.unread}
+        a(href="Javascript:doBrowse()")
+          span#browsemodecount.label.label-success.p10 
     div.row
       div.span1
         if article.icon != null
           img.bigicon(src=article.icon)
       div.span10
         div.feedName 
-          a.feedlink(href=type+"/byfeed/"+escape(article.feedName?article.feedName.replace("/","%2F"):"+")) @#{article.feedName}
+          a.feedlink(href="#!/"+type+"?feed="+escape(article.feedName?article.feedName.replace("/","%2F"):"+")) @#{article.feedName}
           if article.icon != null
             img.miniicon(src=article.icon)
           span.tags.ml10
             if !!article.tags && article.tags.length > 0
               each tag in article.tags  
-                a(href=type+"/bytag/"+escape(tag.toLowerCase()))
+                a(href="#!/"+type+"?tag="+escape(tag.toLowerCase()))
                   span.label.mr10= tag
         div.title= article.title
 
@@ -38,3 +38,6 @@ if !!article._id
 else
   div.row
    div.span12.mt10 No articles
+     div.pull-right
+       a(href="Javascript:doBrowse()")
+         span#browsemodecount.label.label-success.p10 0

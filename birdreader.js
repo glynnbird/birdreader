@@ -12,6 +12,14 @@ var moment = require('moment');
 // we need the express framework
 var express = require('express');
 var app = express();
+var server = require('http').createServer(app);
+var io = require('socket.io').listen(server);
+io.set('log level', 1); // reduce logging
+
+
+// listen on port 3000
+server.listen(3000);
+
 
 // async library
 var async = require('async');
@@ -33,6 +41,8 @@ if (config.purgeArticles && config.purgeArticles.on && config.purgeArticles.purg
 setInterval(function () {
   feed.fetchArticles(function (err, results) {
     console.log("Fetched articles");
+    getStats(function (err, data) {   
+    });
   });
 }, 1000 * 60 * 5);
 
@@ -40,6 +50,8 @@ setInterval(function () {
 cloudant.create(function() {
   feed.fetchArticles(function (err, results) {
     console.log("Fetched articles");
+    getStats(function (err, data) {
+    });
   });
 });
 
@@ -59,12 +71,37 @@ app.use(express.compress());
 // server out our static directory as static files
 app.use(express.static(__dirname + '/public'));
 
+
+// send latest totals to the client via socket.io
+var realtimeStatsUpdate = function(stats) {
+  io.sockets.emit('news', stats);
+}
+
+// fetch the stats, send via socket.io 
+var getStats = function (callback) {
+  article.stats(function (err, retval) {
+    if(!err) {
+      var keys = ['unread', 'read', 'starred'];
+      for(var i = 0; i < keys.length; i++ ) {
+        if(typeof retval[keys[i]] == 'undefined') {
+          retval[keys[i]] = 0;
+        }
+      }
+      realtimeStatsUpdate(retval);
+      callback(err, retval);
+    } else {
+      callback(true, {});
+    }
+
+  });
+}
+
 // home
 app.get('/', function (req, res) {
 
   async.parallel([
     function (callback) {
-      article.stats(callback);
+      getStats(callback);
     }
   ], function (err, results) {
     res.render('browse.jade', { title: "Browse", type: "unread", stats: results[0], articles: [] });
@@ -136,89 +173,8 @@ var processArticles = function (articles) {
   return articles;
 };
 
-// unread articles
-app.get('/unread', function (req, res) {
-  var articles = [];
 
-  async.parallel([
-    function (callback) {
-      article.stats(callback);
-    },
-    function (callback) {
-      article.unreadArticles(callback);
-    }
-  ], function (err, results) {
-    articles = processArticles(results[1]);
-    res.render('index.jade', { title: "Unread",
-                               type: "unread",
-                               stats: results[0],
-                               articles: articles
-      });
-  });
 
-});
-
-// read articles
-app.get('/read', function (req, res) {
-  var articles = [];
-
-  async.parallel([
-    function (callback) {
-      article.stats(callback);
-    },
-    function (callback) {
-      article.readArticles(callback);
-    }
-  ], function (err, results) {
-    articles = processArticles(results[1]);
-    res.render('index.jade', { title: 'Read',
-                               type: "read",
-                               stats: results[0],
-                               articles: articles
-      });
-  });
-
-});
-
-// starred articles
-app.get('/starred', function (req, res) {
-  var articles = [];
-  async.parallel([
-    function (callback) {
-      article.stats(callback);
-    },
-    function (callback) {
-      article.starredArticles(callback);
-    }
-  ], function (err, results) {
-    articles = processArticles(results[1]);
-    res.render('index.jade', { title: 'Starred',
-                               type: "starred",
-                               stats: results[0],
-                               articles: articles
-      });
-  });
-});
-
-// search
-app.get('/search', function (req, res) {
-  var articles = [];
-  async.parallel([
-    function (callback) {
-      article.stats(callback);
-    },
-    function (callback) {
-      article.search(req.query.keywords, callback);
-    }
-  ], function (err, results) {
-    articles = processArticles(results[1]);
-    res.render('index.jade', {title: 'Search "' + req.query.keywords + '"',
-                              type: "search",
-                              stats: results[0],
-                              articles: articles
-      });
-  });
-});
 
 // get raw unread articles
 app.get('/api/unread', function (req, res) {
@@ -262,6 +218,8 @@ app.get('/api/:id/read', function (req, res) {
   // mark the supplied article as read
   article.markRead(req.params.id, function (data) {
     res.send(data);
+    getStats(function (err, data) {
+    });
   });
 
 });
@@ -343,77 +301,122 @@ app.get("/api/starred/byfeed/:feed", function (req, res) {
 app.get("/api/html/next", function (req, res) {
   var articles = [],
     a = null;
-
-  async.parallel([
-    function (callback) {
-      article.stats(callback);
-    },
-    function (callback) {
-      article.singleUnreadArticle(callback);
-    }
-  ], function (err, results) {
-    articles = processArticles(results[1]);
+    
+  article.singleUnreadArticle( function (err, data) {
+    articles = processArticles(data);
     a = {};
     if (articles.length > 0) {
       a = articles[0];
     }
     res.render('browsesingle.jade', { type: "unread",
-                                      stats: results[0],
                                       article: a
       });
+    getStats(function(err,data) {
+    }); 
   });
 
 });
 
+app.get("/api/html/feeds", function (req, res) {
+  
+  // fetch the article stats
+  feed.readAll(function (feeds) {
+    res.render('feeds.jade', {title: 'Feeds', feeds: feeds});
+  });
+});
+
+var renderListPage = function (title, type, data, res) {
+  var articles = processArticles(data);
+  res.render('index.jade', { title: title,
+                             type: type,
+                             articles: articles
+    });
+  getStats(function(err,data) {
+  });
+}
+
+app.get("/api/html/unread", function (req, res) {
+  var qs = req.query,
+    articles = null;
+    
+  if (typeof qs.tag != 'undefined') {
+    article.articlesByTag('unread', qs.tag.toLowerCase(), function (err, data) {
+      renderListPage('Unread by tag - '+qs.tag, 'unread', data, res);
+    });
+  } else if (typeof qs.feed != 'undefined') {
+    article.articlesByFeed('unread', qs.feed.toLowerCase(), function (err, data) {
+      renderListPage('Unread by feed - ' + qs.feed, 'unread', data, res);
+    });
+  } else {
+    article.unreadArticles( function (err, data) {
+      renderListPage('Unread', 'unread', data, res)
+    });
+  }
+  
+
+});
+
+app.get("/api/html/readed", function (req, res) {
+  var qs = req.query,
+    articles = null;
+    
+  if (typeof qs.tag != 'undefined') {
+    article.articlesByTag('read', qs.tag.toLowerCase(), function (err, data) {
+      renderListPage('Read by tag - ' + qs.tag, 'read', data, res)
+    });
+  } else if (typeof qs.feed != 'undefined') {
+      article.articlesByFeed('read', qs.feed.toLowerCase(), function (err, data) {
+        renderListPage('Read by feed - ' + qs.feed, 'read', data, res);
+      });
+  } else {
+    article.readArticles( function (err, data) {
+      renderListPage('Read', 'read', data, res); 
+    });
+  }
+});
+
+app.get("/api/html/starred", function (req, res) {
+  var qs = req.query,
+    articles = null;
+    
+  if (typeof qs.tag != 'undefined') {
+    article.articlesByTag('starred', qs.tag.toLowerCase(), function (err, data) {
+      renderListPage('Starred by tag - '+qs.tag, 'starred', data, res)
+    });
+  } else if (typeof qs.feed != 'undefined') {
+    article.articlesByFeed('starred', qs.feed.toLowerCase(), function (err, data) {
+      renderListPage('Starred by feed - ' + qs.feed, 'starred', data, res);
+    });
+  } else {
+    article.starredArticles( function (err, data) {
+      renderListPage('Starred', 'starred', data, res); 
+    });
+  }
+});
+
+// search
+app.get('/api/html/search', function (req, res) {
+  article.search(req.query.keywords, function (err, data) {
+    renderListPage('Search "' + req.query.keywords + '"', 'search', data, res); 
+  });
+});
 
 // add form articles
-app.get('/add', function (req, res) {
+app.get('/api/html/add', function (req, res) {
 
-  // fetch the article stats
-  article.stats(function (err, stats) {
-
-    // render the page
-    res.render('addform.jade', {title: 'Add', stats: stats});
-  });
-
+  // render the page
+  res.render('addform.jade', {title: 'Add'});
 });
 
-// feeds list
-app.get('/feeds', function (req, res) {
-
-  // fetch the article stats
-  article.stats(function (err, stats) {
-    // fetch the article stats
-    feed.readAll(function (feeds) {
-
-      // render the page
-      res.render('feeds.jade', {title: 'Feeds', feeds: feeds, stats: stats});
-    });
-  });
-
-});
 
 // individual feed
-app.get('/feed/:id', function (req, res) {
-
-  async.parallel([
-    function (callback) {
-      article.stats(callback);
-    },
-    function (callback) {
-      feed.get(req.params.id, function (err, data) {
-        callback(err, data);
-      });
-    }
-  ], function (err, results) {
+app.get('/api/html/feed', function (req, res) {
+  feed.get(req.query.feed_id, function (err, data)  {
     res.render('feed.jade', { title: 'Feed',
-                              base: '../',
-                              feed: results[1],
-                              stats: results[0],
-                              id: req.params.id
+                              feed: data,
+                              id: req.query.feed_id
       });
   });
-
 });
 
 app.get('/api/feeds', function (req, res) {
@@ -455,76 +458,15 @@ app.get('/api/feed/:id/remove', function (req, res) {
 
 });
 
-var byTag = function (type, req, res) {
-  var tag = req.params.tag.toLowerCase(),
-    articles = [];
 
-  async.parallel([
-    function (callback) {
-      article.stats(callback);
-    },
-    function (callback) {
-      article.articlesByTag(type, tag, callback);
-    }
-  ], function (err, results) {
-    articles = processArticles(results[1]);
-    res.render('index.jade', { title: type + ' by tag ' + tag,
-                               base: '../../',
-                               type: type,
-                               stats: results[0],
-                               articles: articles
-      });
+io.sockets.on('connection', function (socket) {
+
+  // send latest stats on connection
+  getStats(function(err,data) {
   });
-};
-
-app.get("/read/bytag/:tag", function (req, res) {
-  byTag("read", req, res);
+  
 });
 
-app.get("/unread/bytag/:tag", function (req, res) {
-  byTag("unread", req, res);
-});
-
-app.get("/starred/bytag/:tag", function (req, res) {
-  byTag("starred", req, res);
-});
-
-var byFeed = function (type, req, res) {
-  var feed = req.params.feed.toLowerCase(),
-    articles = [];
-
-  async.parallel([
-    function (callback) {
-      article.stats(callback);
-    },
-    function (callback) {
-      article.articlesByFeed(type, feed, callback);
-    }
-  ], function (err, results) {
-    articles = processArticles(results[1]);
-    res.render('index.jade', { title: type + ' by feed ' + feed,
-                               base: '../../',
-                               type: type,
-                               stats: results[0],
-                               articles: articles
-      });
-  });
-};
-
-app.get("/read/byfeed/:feed", function (req, res) {
-  byFeed("read", req, res);
-});
-
-app.get("/unread/byfeed/:feed", function (req, res) {
-  byFeed("unread", req, res);
-});
-
-app.get("/starred/byfeed/:feed", function (req, res) {
-  byFeed("starred", req, res);
-});
-
-// listen on port 3000
-app.listen(3000);
 console.log('Listening on port 3000');
 
 
