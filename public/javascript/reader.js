@@ -96,6 +96,7 @@ var doBrowse = function() {
     cache: false
   }).done(function( html ) {
     $("#target").html(html);
+    $('#browsemodecount').html(latest_unread);
   });
 }
 
@@ -205,9 +206,12 @@ var searchRedirect = function() {
   return false;
 }
 
+var latest_unread = '0';
+
 $(document).ready(function () { 
   var socket = io.connect(window.location.hostname);
   socket.on('news', function (data) {
+    latest_unread = data.unread;
     $('#browsecount').html(data.unread);
     $('#unreadcount').html(data.unread);
     $('#readcount').html(data.read); 
