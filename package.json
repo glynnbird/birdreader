@@ -14,6 +14,7 @@
     "express": "3.2.6",
     "jade": "0.28.2",
     "extractor": "0.1.2",
-    "socket.io": "0.9.16"
+    "socket.io": "0.9.16",
+    "rss": "0.2.1"
   }
 }

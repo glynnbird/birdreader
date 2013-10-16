@@ -16,6 +16,8 @@ var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
 io.set('log level', 1); // reduce logging
 
+// rss library
+var RSS = require('rss');
 
 // listen on port 3000
 server.listen(3000);
@@ -94,7 +96,37 @@ var getStats = function (callback) {
     }
 
   });
-}
+};
+
+// get starred articles as RSS feed
+app.get('/rss.xml', function (req, res) {
+  article.starredArticles(function (err, data) {
+    var host = req.headers.host;
+    var options = {
+      title: host + " -  favourites",
+      description: 'The favourite articles of '+host,
+      feed_url: host+'/rss.xml',
+      site_url: 'http://'+host,
+      author: 'BirdReader',
+      language: 'en'
+    };
+    var feed = new RSS();
+    for(var i in data) {
+      var article = data[i];
+      var item = {
+        title : article.title,
+        description: article.description,
+        url: article.link,
+        guid: article._id,
+        author: article.feedName,
+        date: article.pubDate
+      }
+      feed.item(item);
+    }
+    res.setHeader('Content-Type', 'application/rss+xml');
+    res.send(feed.xml());
+  });
+});
 
 // home
 app.get('/', function (req, res) {
@@ -457,7 +489,6 @@ app.get('/api/feed/:id/remove', function (req, res) {
   });
 
 });
-
 
 io.sockets.on('connection', function (socket) {
 
