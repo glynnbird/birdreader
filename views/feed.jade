@@ -19,8 +19,8 @@ div #{feed.lastModified}
 h3 Tags
 div.tags
   each tag in feed.tags  
-    a.btn.btn-large.mr10(href='Javascript:void()',onclick="removeTag('"+id+"','"+tag+"')")
-      i.icon-remove
+    a.btn.btn-lg.mr10(href='Javascript:void()',onclick="removeTag('"+id+"','"+tag+"')")
+      i.glyphicon.glyphicon-remove
       span &nbsp; #{tag}
 
 h3 Add Tag
@@ -29,8 +29,8 @@ h3 Add Tag
     input(type="submit",value="Add Tag")    
 
 h3 Remove Feed
-a.btn.btn-large.btn-danger(href='Javascript:void()',onclick="removeFeed('"+id+"')")
-  i.icon-remove
+a.btn.btn-lg.btn-danger(href='Javascript:void()',onclick="removeFeed('"+id+"')")
+  i.glyphicon.glyphicon-remove
   span &nbsp; REMOVE
   
 div.mb20

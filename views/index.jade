@@ -3,10 +3,10 @@ ul.breadcrumb
 each article in articles
   div.article(id=article._id)
     div.row
-      div.span1
+      div.col-md-1
         if article.icon != null
           img.bigicon(src=article.icon)
-      div.span11
+      div.col-md-11
         div.feedName 
           a.feedlink(href="#!/"+type+"?feed="+escape(article.feedName?article.feedName.replace("/","%2F"):"+")) @#{article.feedName}
           if article.icon != null
@@ -24,15 +24,15 @@ each article in articles
           a.mr10(id="expand"+article._id,href="Javascript:readArticle('"+article._id+"')") Expand
           a.mr10.tobeshown(id="hide"+article._id,href="Javascript:hideArticle('"+article._id+"')") Hide
     div.row
-      div.span12
+      div.col-md-12
         div.showable.pb20(id="body"+article._id)
           a.btn.btn-success.mr5(href=article.link,target='_blank') Go
           - if (article.starred)
             a.btn-warning.btn.mr5(id="star"+article._id,href="Javascript:unstarArticle('"+article._id+"')")
-              i.icon-star
+              i.glyphicon.glyphicon-star
           - else
             a.btn.mr5(id="star"+article._id,href="Javascript:starArticle('"+article._id+"')")
-              i.icon-star
+              i.glyphicon.glyphicon-star
           a.btn.mr5(href="http://twitter.com/share?url="+article.link,target="_new",rel="nofollow") Twitter
           a.btn.mr5(href="http://www.facebook.com/sharer.php?u="+article.link,target="_new",rel="nofollow") Facebook
           div.mb10

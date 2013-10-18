@@ -4,16 +4,15 @@ div
     a.btn.btn-medium.btn-success(href="#!/add") Add Feed
   div.spacer
 
-ol
-  each feed in feeds
-    li(id=feed._id)
-      div.feed
-        div.span1
-          if feed.icon != null
-            img.favicon(src=feed.icon)
-        div.span8
-          a.feedName(href="#!/feed?feed_id="+escape(feed._id)) @#{feed.title}
-          div.tags
-            each tag in feed.tags  
-              span.label.mr10= tag
+
+each feed in feeds
+  div.row.feed(id=feed._id)
+    div.col-md-1
+      if feed.icon != null
+        img.favicon(src=feed.icon)
+    div.col-md-8
+      a.feedName(href="#!/feed?feed_id="+escape(feed._id)) @#{feed.title}
+      div.tags
+        each tag in feed.tags  
+          span.label.mr10= tag
 
