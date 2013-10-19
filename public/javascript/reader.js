@@ -214,6 +214,7 @@ var searchRedirect = function() {
 var latest_unread = '0';
 
 $(document).ready(function () { 
+  $(".nbc").collapse('hide');
   var socket = io.connect(window.location.hostname);
   socket.on('news', function (data) {
     latest_unread = data.unread;
