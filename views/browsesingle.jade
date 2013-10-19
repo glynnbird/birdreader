@@ -24,15 +24,18 @@ if !!article._id
     div.row
       div.col-md-12.mt10
         div.pb20(id="body"+article._id)
-          a.btn.btn-success.mr5(href=article.link,target='_blank') Go
+          a.btn.mr5(href=article.link,target='_blank') Go
+            i.icon-share
           - if (article.starred)
             a.btn-warning.btn.mr5(id="star"+article._id,href="Javascript:unstarArticle('"+article._id+"')")
-              i.glyphicon.glyphicon-star
+              i.icon-star
           - else
-            a.btn.btn-default.mr5(id="star"+article._id,href="Javascript:starArticle('"+article._id+"')")
-              i.glyphicon.glyphicon-star
-          a.btn.btn-default.mr5(href="http://twitter.com/share?url="+article.link,target="_new",rel="nofollow") Twitter
-          a.btn.btn-default.mr5(href="http://www.facebook.com/sharer.php?u="+article.link,target="_new",rel="nofollow") Facebook
+            a.btn.mr5(id="star"+article._id,href="Javascript:starArticle('"+article._id+"')")
+              i.icon-star
+          a.btn.mr5(href="http://twitter.com/share?url="+article.link,target="_new",rel="nofollow")
+            i.icon-twitter
+          a.btn.mr5(href="http://www.facebook.com/sharer.php?u="+article.link,target="_new",rel="nofollow")
+            i.icon-facebook
           div.mb10
           div(id="description"+article._id)!= article.description
 else

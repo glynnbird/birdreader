@@ -164,7 +164,7 @@ h1 {
 }
 
 .article {
-
+  overflow: none;
 }
 
 .diff {
