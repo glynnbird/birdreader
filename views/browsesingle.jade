@@ -24,7 +24,7 @@ if !!article._id
     div.row
       div.col-md-12.mt10
         div.pb20(id="body"+article._id)
-          a.btn.mr5(href=article.link,target='_blank') Go
+          a.btn.mr5(href=article.link,target='_blank')
             i.icon-share
           - if (article.starred)
             a.btn-warning.btn.mr5(id="star"+article._id,href="Javascript:unstarArticle('"+article._id+"')")

@@ -97,6 +97,7 @@ var doBrowse = function() {
   }).done(function( html ) {
     $("#target").html(html);
     $('#browsemodecount').html(latest_unread);
+    $(".nbc").collapse('hide')    
   });
 }
 
@@ -113,6 +114,7 @@ var doUnread = function() {
     data: data
   }).done(function( html ) {
     $("#target").html(html);
+    $(".nbc").collapse('hide')
   });
 }
 
@@ -129,6 +131,7 @@ var doRead = function() {
     data: data
   }).done(function( html ) {
     $("#target").html(html);
+    $(".nbc").collapse('hide')
   });
 }
 
@@ -145,6 +148,7 @@ var doStarred = function() {
     data: data
   }).done(function( html ) {
     $("#target").html(html);
+    $(".nbc").collapse('hide')
   });
 }
 
@@ -155,6 +159,7 @@ var doFeeds = function() {
     cache: false
   }).done(function( html ) {
     $("#target").html(html);
+    $(".nbc").collapse('hide')
   });
 }
 
