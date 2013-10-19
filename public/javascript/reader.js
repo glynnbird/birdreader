@@ -222,10 +222,10 @@ $(document).ready(function () {
   });
   
   socket.on('connect', function () {
-    $('#connected').html("<i class='glyphicon glyphicon-star icon-white'></i>");
+    $('#connected').html(" <i class='glyphicon glyphicon-star icon-white'></i>");
   });
   socket.on('disconnect', function () {
-    $('#connected').html("<i class='glyphicon glyphicon-star-empty icon-white'></i>");
+    $('#connected').html(" <i class='glyphicon glyphicon-star-empty icon-white'></i>");
   });
   
 });

@@ -161,7 +161,7 @@ h1 {
 }
 
 .article {
-  
+  margin-top:60px;
 }
 
 .diff {
@@ -177,9 +177,7 @@ h1 {
 }
 
 @media (min-width: 769px) {
-  .mt40 {
-    margin-top: 60px;
-  }
+
 }
 
 .mt10 {

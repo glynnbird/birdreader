@@ -2,10 +2,10 @@
 if !!article._id 
   div.article(id=article._id)
 
-    div.pull-right
-        a(href="Javascript:doBrowse()")
-          span#browsemodecount.label.label-success.p10 
     div.row
+      div.pull-right
+        a(href="Javascript:doBrowse()")
+          span#browsemodecount.label.label-success.p10
       div.col-md-1
         if article.icon != null
           img.bigicon(src=article.icon)
@@ -20,6 +20,9 @@ if !!article._id
                 a(href="#!/"+type+"?tag="+escape(tag.toLowerCase()))
                   span.label.mr10= tag
         div.title= article.title
+        div.pull-right
+          a(href="Javascript:doBrowse()")
+            span#browsemodecount.label.label-success.p10
 
     div.row
       div.col-md-12.mt10
