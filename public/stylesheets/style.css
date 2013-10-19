@@ -54,6 +54,9 @@ body {
   margin-right:5px;
 }
 
+.mt40 {
+  margin-top:60px;
+}
 
 .mr10 {
   margin-right:10px;
@@ -161,7 +164,7 @@ h1 {
 }
 
 .article {
-  margin-top:60px;
+
 }
 
 .diff {
