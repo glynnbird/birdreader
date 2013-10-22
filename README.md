@@ -264,6 +264,16 @@ This feature was added after launch. To retro-fit icons to your existing feeds, 
   node retrofit_favicons.js
 ```
 
+## Tests
 
+There are some tests in the 'test' directory to run them you'll need [Mocha](http://visionmedia.github.io/mocha/):
 
+```
+  sudo npm install -g mocha
+```
 
+and then run the tests
+
+```
+  mocha
+```

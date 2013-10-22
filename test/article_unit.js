@@ -173,6 +173,7 @@ describe('article', function(){
 });
 
 describe('article', function(){
+  this.timeout(10000);
   describe('removing an article from the database', function(){
     it('should remove the article without error', function(done){
       setTimeout(function() {
