@@ -352,7 +352,7 @@ app.get("/api/html/next", function (req, res) {
 app.get("/api/html/feeds", function (req, res) {
   
   // fetch the article stats
-  feed.readAll(function (feeds) {
+  feed.readAll(function (err, feeds) {
     res.render('feeds.jade', {title: 'Feeds', feeds: feeds});
   });
 });
@@ -452,7 +452,7 @@ app.get('/api/html/feed', function (req, res) {
 });
 
 app.get('/api/feeds', function (req, res) {
-  feed.readAll(function (data) {
+  feed.readAll(function (err, data) {
     res.send(data);
   });
 });

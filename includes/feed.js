@@ -21,7 +21,7 @@ var readAll = function (callback) {
         retval.push(data.rows[i].doc);
       }
     }
-    callback(retval);
+    callback(err, retval);
   });
 };
 
@@ -112,7 +112,7 @@ var fetchArticles = function (callback) {
     bigresults = [];
 
   // load all articles from Cloudant
-  readAll(function (allFeeds) {
+  readAll(function (err, allFeeds) {
     
     // for each feed
     for (i = 0; i < allFeeds.length; i++) {
@@ -173,7 +173,7 @@ var add = function (url, callback) {
   extractor.scrape(url, selector, function (err, data, env) {
     if (err) {
       retval = { success: false, message: "Could not fetch" + url};
-      return callback(false, retval);
+      return callback(true, retval);
     }
 
     feed = {};
@@ -187,7 +187,7 @@ var add = function (url, callback) {
     feed.lastModified = moment().format('YYYY-MM-DD HH:mm:ss Z');
 
     if (!data.links) {
-      return callback(false, { success: false, message: "Could not add feed for " + url});
+      return callback(true, { success: false, message: "Could not add feed for " + url});
     }
     
     // look for matching link tags
@@ -235,16 +235,15 @@ var add = function (url, callback) {
         // add it to the database
         feeds.insert(feed, function (err, data) {
 //          console.log(err,data);
+            retval = { success: true, message: "Added feed for " + url, data:data};
+            callback(null, retval);
         });
-        retval = { success: true, message: "Added feed for " + url};
-        callback(true, retval);
-
       });
 
 
     } else {
       retval = { success: false, message: "Could not add feed for " + url};
-      callback(false, retval);
+      callback(true, retval);
     }
   });
 
@@ -262,7 +261,7 @@ var addTag = function (id, tag, callback) {
     if (!err) {
       data.tags.push(tag);
       feeds.insert(data, function (err, data) {
-        callback(true, data);
+        callback(null, data);
       });
     }
   });
@@ -279,7 +278,7 @@ var removeTag = function (id, tag, callback) {
         }
       }
       feeds.insert(data, function (err, data) {
-        callback(true, data);
+        callback(null, data);
       });
     }
   });
@@ -290,7 +289,7 @@ var remove = function (id, callback) {
   feeds.get(id, function (err, data) {
     if (!err) {
       feeds.destroy(id, data._rev, function (err, data) {
-        callback(true, data);
+        callback(null, data);
       });
     }
   });
@@ -306,6 +305,7 @@ var update = function (feed, callback) {
 module.exports = {
   readAll: readAll,
   fetchArticles: fetchArticles,
+  fetchFeed: fetchFeed,
   add: add,
   get: get,
   addTag: addTag,
