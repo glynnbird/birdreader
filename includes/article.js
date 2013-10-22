@@ -177,9 +177,9 @@ var star = function (id, callback) {
 
         });
 
-        callback(doc);
+        callback(null, doc);
       } else {
-        callback(doc);
+        callback(null, doc);
       }
 
     } else {
@@ -203,9 +203,9 @@ var unstar = function (id, callback) {
         articles.insert(doc, function (err, data) {
 
         });
-        callback(doc);
+        callback(null, doc);
       } else {
-        callback(doc);
+        callback(null, doc);
       }
 
     } else {

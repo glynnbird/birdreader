@@ -260,7 +260,7 @@ app.get('/api/:id/read', function (req, res) {
 app.get('/api/:id/star', function (req, res) {
 
   // mark the supplied article as starred
-  article.star(req.params.id, function (data) {
+  article.star(req.params.id, function (err, data) {
     res.send(data);
   });
 
@@ -270,7 +270,7 @@ app.get('/api/:id/star', function (req, res) {
 app.get('/api/:id/unstar', function (req, res) {
 
   // mark the supplied article as un-starred
-  article.unstar(req.params.id, function (data) {
+  article.unstar(req.params.id, function (err, data) {
     res.send(data);
   });
 
