@@ -5,6 +5,7 @@ nav.navbar.navbar-default
     if (Object.keys(counts.bytag).length > 0)
       li.dropdown
         a(data-toggle='dropdown') Filter By Tag
+          span.caret
         ul.dropdown-menu(role='menu',aria-labelledby='dropdownMenu1')
           li(role='presentation')
             each count,tag in counts.bytag
@@ -12,6 +13,7 @@ nav.navbar.navbar-default
     if (Object.keys(counts.byfeed).length > 0 )
       li.dropdown
         a(data-toggle='dropdown') Filter By Feed
+          span.caret
         ul.dropdown-menu(role='menu',aria-labelledby='dropdownMenu1')
           li(role='presentation')
             each count,feed in counts.byfeed
