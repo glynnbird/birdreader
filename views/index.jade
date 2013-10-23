@@ -1,7 +1,7 @@
 nav.navbar.navbar-default
   div.navbar-header
     a.navbar-brand #{title}
-  ul.nav.navbar-nav
+  ul.nav.navbar-nav.hidden-xs
     if (Object.keys(counts.bytag).length > 0)
       li.dropdown
         a(data-toggle='dropdown') Filter By Tag
