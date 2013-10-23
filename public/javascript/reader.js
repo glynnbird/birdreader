@@ -1,6 +1,7 @@
 var apiMarkAsRead=function(id) {
   $.getJSON("api/"+id+"/read", function(data) {
      $("#description"+id).html(data.description);
+     $('img').addClass('img-responsive');
   });
 
 }
@@ -97,7 +98,8 @@ var doBrowse = function() {
   }).done(function( html ) {
     $("#target").html(html);
     $('#browsemodecount').html(latest_unread);
-    $(".nbc").collapse('hide')    
+    $(".nbc").collapse('hide')   ;
+    $('img').addClass('img-responsive'); 
   });
 }
 
@@ -131,7 +133,7 @@ var doRead = function() {
     data: data
   }).done(function( html ) {
     $("#target").html(html);
-    $(".nbc").collapse('hide')
+    $(".nbc").collapse('hide');
   });
 }
 
