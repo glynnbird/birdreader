@@ -2,6 +2,7 @@ var articles = require('./cloudant.js').articles;
 
 var moment = require('moment');
 var async = require('async');
+var mc = require('./mc.js');
 
 // fetch unread articles from couchdb
 var singleUnreadArticle = function (callback) {
@@ -43,11 +44,11 @@ var unreadArticles = function (callback) {
   var retval = [],
     i = 0;
 
-  // equivalent of CouchDB https://<server>:<port>/articles/_design/matching/_view/byts?limit=100
+  // equivalent of CouchDB https://<server>:<port>/articles/_design/matching/_view/byts?limit=20
   // ----&reduce=false&include_docs=true&descending=true&startkey=["unreadz"]&endkey=["unread"]
   // N.B. when doing doing descending=true with startkey/endkey, you must
   // also swap startkey/endkey(!)
-  articles.view('matching', 'byts', { limit: 100,
+  articles.view('matching', 'byts', { limit: 20,
                                       reduce: false,
                                       include_docs: true,
                                       descending: true,
@@ -70,11 +71,11 @@ var readArticles = function (callback) {
   var retval = [],
     i = 0;
 
-  // equivalent of CouchDB https://<server>:<port>/articles/_design/matching/_view/byts?limit=100
+  // equivalent of CouchDB https://<server>:<port>/articles/_design/matching/_view/byts?limit=20
   // ---&reduce=false&include_docs=true&descending=true&startkey=["readz"]&endkey=["read"]
   // N.B. when doing doing descending=true with startkey/endkey, you must also
   // swap startkey/endkey(!)
-  articles.view('matching', 'byts', { limit: 100,
+  articles.view('matching', 'byts', { limit: 20,
                                       reduce: false,
                                       include_docs: true,
                                       descending: true,
@@ -97,11 +98,11 @@ var starredArticles = function (callback) {
   var retval = [],
     i = 0;
 
-  // equivalent of CouchDB https://<server>:<port>/articles/_design/matching/_view/byts?limit=100
+  // equivalent of CouchDB https://<server>:<port>/articles/_design/matching/_view/byts?limit=20
   // ---&reduce=false&include_docs=true&descending=true&startkey=["starredz"]&endkey=["starred"]
   // N.B. when doing doing descending=true with startkey/endkey, you must also
   // swap startkey/endkey(!)
-  articles.view('matching', 'byts', { limit: 100,
+  articles.view('matching', 'byts', { limit: 20,
                                       reduce: false,
                                       include_docs: true,
                                       descending: true,
@@ -138,6 +139,10 @@ var stats = function (callback) {
 
 // fetch the article counts
 var counts = function (type, callback) {
+  var val = mc.get(type);
+  if(val) {
+    return callback(null, val);
+  }
   async.parallel([
       function(callback) {
         var params = { group_level: 2, stale:"ok", startkey:[type], endkey:[type+"z"]};
@@ -164,7 +169,9 @@ var counts = function (type, callback) {
         });
       }
     ], function(err, results) {
-      callback(null, { "bytag": results[0], "byfeed": results[1]});
+      var retval = { "bytag": results[0], "byfeed": results[1]};
+      mc.set(type, retval);
+      callback(null, retval);
     });
 
 };
@@ -253,12 +260,12 @@ var articlesByTag = function (type, tag, callback) {
   var retval = [],
     i = 0;
 
-  // equivalent of CouchDB https://<server>:<port>/articles/_design/matching/_view/bytag?limit=100
+  // equivalent of CouchDB https://<server>:<port>/articles/_design/matching/_view/bytag?limit=20
   // --- &reduce=false&include_docs=true&descending=true&startkey=["starred","applez"]
   // ----&endkey=["starred","apple"]
   // N.B. when doing doing descending=true with startkey/endkey, you must also
   // swap startkey/endkey(!)
-  articles.view('matching', 'bytag', { limit: 100,
+  articles.view('matching', 'bytag', { limit: 20,
                                        reduce: false,
                                        include_docs: true,
                                        descending: true,
@@ -282,11 +289,11 @@ var articlesByFeed = function (type, feed, callback) {
     i = 0;
 
   // equivalent of CouchDB https://<server>:<port>/articles/_design/matching/_view/bytag?
-  // ---- limit=100&reduce=false&include_docs=true&descending=true
+  // ---- limit=20&reduce=false&include_docs=true&descending=true
   // ----- &startkey=["starred","applez"]&endkey=["starred","apple"]
   // N.B. when doing doing descending=true with startkey/endkey, you must also 
   // swap startkey/endkey(!)
-  articles.view('matching', 'byfeed', { limit: 100,
+  articles.view('matching', 'byfeed', { limit: 20,
                                         reduce: false,
                                         include_docs: true,
                                         descending: true,
@@ -311,7 +318,7 @@ var search = function (keywords, callback) {
     i = 0;
 
   articles.search('search', 'ft', { q: query,
-                                    limit: 100,
+                                    limit: 20,
                                     include_docs: true,
                                     sort: "\"-pubDateTS\""
                                   }, function (err, data) {

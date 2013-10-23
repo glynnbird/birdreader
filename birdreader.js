@@ -378,7 +378,7 @@ app.get("/api/html/unread", function (req, res) {
 
   async.parallel([
     function(callback) {
-      article.counts('read', function(err,data) {
+      article.counts('unread', function(err,data) {
         callback(err, data);
       });
     },
@@ -390,7 +390,7 @@ app.get("/api/html/unread", function (req, res) {
         });
       } else if (typeof qs.feed != 'undefined') {
         title = 'Unread by feed - ' + qs.feed
-        article.articlesByFeed('Unread', qs.feed.toLowerCase(), function (err, data) {
+        article.articlesByFeed('unread', qs.feed.toLowerCase(), function (err, data) {
           callback(err,data);
         });
       } else {
