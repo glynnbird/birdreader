@@ -403,7 +403,7 @@ app.get("/api/html/unread", function (req, res) {
     ] , function(err, results) {
       var counts = results[0];
       var data = results[1];
-      renderListPage(title, 'Unread', data, res, counts)
+      renderListPage(title, 'unread', data, res, counts)
     });
 
 });
