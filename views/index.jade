@@ -1,5 +1,21 @@
-ul.breadcrumb
-  li.active #{title}
+nav.navbar.navbar-default
+  div.navbar-header
+    a.navbar-brand #{title}
+  ul.nav.navbar-nav
+    if (Object.keys(counts.bytag).length > 0)
+      li.dropdown
+        a(data-toggle='dropdown') Filter By Tag
+        ul.dropdown-menu(role='menu',aria-labelledby='dropdownMenu1')
+          li(role='presentation')
+            each count,tag in counts.bytag
+              a(role='menuitem',tabindex='-1',href='#!/'+type+'?tag='+escape(tag)) #{tag} (#{count})
+    if (Object.keys(counts.byfeed).length > 0 )
+      li.dropdown
+        a(data-toggle='dropdown') Filter By Feed
+        ul.dropdown-menu(role='menu',aria-labelledby='dropdownMenu1')
+          li(role='presentation')
+            each count,feed in counts.byfeed
+              a(role='menuitem',tabindex='-1',href='#!/'+type+'?feed='+escape(feed?feed.replace("/","%2F"):'+')) #{feed} (#{count})    
 each article in articles
   div.article(id=article._id)
     div.row
@@ -14,7 +30,7 @@ each article in articles
           span.tags.ml10
             each tag in article.tags  
               a(href="#!/"+type+"?tag="+escape(tag.toLowerCase()))
-                span.label.mr10= tag
+                span.label.label-default.mr10= tag
         div.title
           a(href="Javascript:readArticle('"+article._id+"')")= article.title
           span.diff &nbsp; #{article.diff}

@@ -1,6 +1,7 @@
 var articles = require('./cloudant.js').articles;
 
 var moment = require('moment');
+var async = require('async');
 
 // fetch unread articles from couchdb
 var singleUnreadArticle = function (callback) {
@@ -133,6 +134,39 @@ var stats = function (callback) {
     }
     callback(err, retval);
   });
+};
+
+// fetch the article counts
+var counts = function (type, callback) {
+  async.parallel([
+      function(callback) {
+        var params = { group_level: 2, stale:"ok", startkey:[type], endkey:[type+"z"]};
+        articles.view('matching', 'bytag', params, function (err, data) {
+          var retval = {};
+          if (!err) {
+            for (i = 0; i < data.rows.length; i++) {
+              retval[data.rows[i].key[1]] = data.rows[i].value;
+            }
+          }
+          callback(null, retval);
+        });
+      },
+      function(callback) {
+        var params = { group_level: 2, stale:"ok", startkey:[type], endkey:[type+"z"]};
+        articles.view('matching', 'byfeed', params, function (err, data) {
+          var retval = {};
+          if (!err) {
+            for (i = 0; i < data.rows.length; i++) {
+              retval[data.rows[i].key[1]] = data.rows[i].value;
+            }
+          }
+          callback(null, retval);
+        });
+      }
+    ], function(err, results) {
+      callback(null, { "bytag": results[0], "byfeed": results[1]});
+    });
+
 };
 
 // mark an article as read
@@ -338,6 +372,7 @@ module.exports = {
   star: star,
   unstar: unstar,
   stats: stats,
+  counts: counts,
   articlesByTag: articlesByTag,
   articlesByFeed: articlesByFeed,
   search: search,

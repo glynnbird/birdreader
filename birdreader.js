@@ -357,11 +357,15 @@ app.get("/api/html/feeds", function (req, res) {
   });
 });
 
-var renderListPage = function (title, type, data, res) {
+var renderListPage = function (title, type, data, res, counts) {
   var articles = processArticles(data);
+  if(typeof counts=="undefined") {
+    counts={bytag:[], byfeed:[]};
+  }
   res.render('index.jade', { title: title,
                              type: type,
-                             articles: articles
+                             articles: articles,
+                             counts: counts
     });
   getStats(function(err,data) {
   });
@@ -369,61 +373,113 @@ var renderListPage = function (title, type, data, res) {
 
 app.get("/api/html/unread", function (req, res) {
   var qs = req.query,
-    articles = null;
-    
-  if (typeof qs.tag != 'undefined') {
-    article.articlesByTag('unread', qs.tag.toLowerCase(), function (err, data) {
-      renderListPage('Unread by tag - '+qs.tag, 'unread', data, res);
+    articles = null,
+    title = null;
+
+  async.parallel([
+    function(callback) {
+      article.counts('read', function(err,data) {
+        callback(err, data);
+      });
+    },
+    function(callback) {
+      if (typeof qs.tag != 'undefined') {
+        title = 'Unread by tag - '+qs.tag;
+        article.articlesByTag('unread', qs.tag.toLowerCase(), function (err, data) { 
+          callback(err,data);
+        });
+      } else if (typeof qs.feed != 'undefined') {
+        title = 'Unread by feed - ' + qs.feed
+        article.articlesByFeed('Unread', qs.feed.toLowerCase(), function (err, data) {
+          callback(err,data);
+        });
+      } else {
+        title = 'Unread';
+        article.unreadArticles( function (err, data) {
+         callback(err,data);
+        });
+      }
+    }
+    ] , function(err, results) {
+      var counts = results[0];
+      var data = results[1];
+      renderListPage(title, 'Unread', data, res, counts)
     });
-  } else if (typeof qs.feed != 'undefined') {
-    article.articlesByFeed('unread', qs.feed.toLowerCase(), function (err, data) {
-      renderListPage('Unread by feed - ' + qs.feed, 'unread', data, res);
-    });
-  } else {
-    article.unreadArticles( function (err, data) {
-      renderListPage('Unread', 'unread', data, res)
-    });
-  }
-  
 
 });
 
 app.get("/api/html/readed", function (req, res) {
-  var qs = req.query,
-    articles = null;
     
-  if (typeof qs.tag != 'undefined') {
-    article.articlesByTag('read', qs.tag.toLowerCase(), function (err, data) {
-      renderListPage('Read by tag - ' + qs.tag, 'read', data, res)
-    });
-  } else if (typeof qs.feed != 'undefined') {
-      article.articlesByFeed('read', qs.feed.toLowerCase(), function (err, data) {
-        renderListPage('Read by feed - ' + qs.feed, 'read', data, res);
+  var qs = req.query,
+    articles = null,
+    title = null;
+
+  async.parallel([
+    function(callback) {
+      article.counts('read', function(err,data) {
+        callback(err, data);
       });
-  } else {
-    article.readArticles( function (err, data) {
-      renderListPage('Read', 'read', data, res); 
-    });
-  }
+    },
+    function(callback) {
+      if (typeof qs.tag != 'undefined') {
+        title = 'Read by tag - '+qs.tag;
+        article.articlesByTag('read', qs.tag.toLowerCase(), function (err, data) { 
+          callback(err,data);
+        });
+      } else if (typeof qs.feed != 'undefined') {
+        title = 'Read by feed - ' + qs.feed
+        article.articlesByFeed('read', qs.feed.toLowerCase(), function (err, data) {
+          callback(err,data);
+        });
+      } else {
+        title = 'Read';
+        article.readArticles( function (err, data) {
+         callback(err,data);
+        });
+      }
+    }
+    ] , function(err, results) {
+      var counts = results[0];
+      var data = results[1];
+      renderListPage(title, 'read', data, res, counts)
+    }); 
+
 });
 
 app.get("/api/html/starred", function (req, res) {
   var qs = req.query,
-    articles = null;
-    
-  if (typeof qs.tag != 'undefined') {
-    article.articlesByTag('starred', qs.tag.toLowerCase(), function (err, data) {
-      renderListPage('Starred by tag - '+qs.tag, 'starred', data, res)
+    articles = null,
+    title = null;
+
+  async.parallel([
+    function(callback) {
+      article.counts('starred', function(err,data) {
+        callback(err, data);
+      });
+    },
+    function(callback) {
+      if (typeof qs.tag != 'undefined') {
+        title = 'Starred by tag - '+qs.tag;
+        article.articlesByTag('starred', qs.tag.toLowerCase(), function (err, data) { 
+          callback(err,data);
+        });
+      } else if (typeof qs.feed != 'undefined') {
+        title = 'Starred by feed - ' + qs.feed
+        article.articlesByFeed('starred', qs.feed.toLowerCase(), function (err, data) {
+          callback(err,data);
+        });
+      } else {
+        title = 'Starred';
+        article.starredArticles( function (err, data) {
+         callback(err,data);
+        });
+      }
+    }
+    ] , function(err, results) {
+      var counts = results[0];
+      var data = results[1];
+      renderListPage(title, 'starred', data, res, counts)
     });
-  } else if (typeof qs.feed != 'undefined') {
-    article.articlesByFeed('starred', qs.feed.toLowerCase(), function (err, data) {
-      renderListPage('Starred by feed - ' + qs.feed, 'starred', data, res);
-    });
-  } else {
-    article.starredArticles( function (err, data) {
-      renderListPage('Starred', 'starred', data, res); 
-    });
-  }
 });
 
 // search
