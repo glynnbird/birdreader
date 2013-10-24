@@ -16,10 +16,11 @@ if !!article._id
               each tag in article.tags  
                 a(href="#!/"+type+"?tag="+escape(tag.toLowerCase()))
                   span.label.mr10= tag
-        div.title= article.title
           div.pull-right
             a(href="Javascript:doBrowse()")
-              span#browsemodecount.label.label-success.p10.mr5
+              span#browsemodecount.label.label-success.p10.mr5        
+        div.title= article.title
+
 
     div.row
       div.col-md-12.mt10
