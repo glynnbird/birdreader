@@ -191,4 +191,7 @@ h1 {
   padding:10px;
 }
 
+.iframe-responsive {
+  max-width:100%;
+}
 
