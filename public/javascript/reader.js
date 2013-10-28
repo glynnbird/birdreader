@@ -2,6 +2,7 @@ var apiMarkAsRead=function(id) {
   $.getJSON("api/"+id+"/read", function(data) {
      $("#description"+id).html(data.description);
      $('img').addClass('img-responsive');
+     $('img').addClass('iframe-responsive');
   });
 
 }
@@ -100,6 +101,7 @@ var doBrowse = function() {
     $('#browsemodecount').html(latest_unread);
     $(".nbc").collapse('hide')   ;
     $('img').addClass('img-responsive'); 
+    $('iframe').addClass('iframe-responsive');
   });
 }
 
