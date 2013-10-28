@@ -41,7 +41,8 @@ if !!article._id
           div(id="description"+article._id)!= article.description
 else
   div.row
-   div.col-md-12.mt10 No articles
-     div.pull-right
-       a(href="Javascript:doBrowse()")
-         span#browsemodecount.label.label-success.p10 0
+    div.col-md-1 &nbsp;
+    div.col-md-10.mt10 No articles
+      div.pull-right
+        a(href="Javascript:doBrowse()")
+          span#browsemodecount.label.label-success.p10 0
