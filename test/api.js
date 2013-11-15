@@ -2,6 +2,7 @@ var assert = require('assert'),
   article = require('../includes/article.js'),
   moment = require('moment'),
   request = require('request'),
+  should = require('should'),
   cloudant = require('../includes/cloudant.js');
   
 var testDate = moment().subtract('years', 7);
@@ -27,6 +28,7 @@ describe('api', function(){
     it('should add the article without error', function(done){
       cloudant.articles.insert(testArticle, function(err,data) {
         assert.equal(err, null);
+        data.should.be.ok;
         assert.ok(data);
         done();
       });
