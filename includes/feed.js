@@ -28,6 +28,12 @@ var readAll = function (callback) {
 // fetch 'feed' and callback when done, passing (err, articles)
 var fetchFeed = function (feed, callback) {
 
+  // check that the feed is valid before fetching
+  var parsed = u.parse(feed.xmlUrl);
+  if (parsed.protocol != "http" || parsed.protocol != "https" ) {
+    return callback(true, []);
+  }
+
   // only get articles newer than this feed's newest article
   var newerThan = moment(feed.lastModified),
     latest = moment(feed.lastModified),
