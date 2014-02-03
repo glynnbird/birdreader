@@ -220,17 +220,9 @@ var add = function (url, callback) {
     // if we have found a feed
     if (feed.xmlUrl) {
       
-      // for relative to protocol xmlUrl path <//server.com/rss>
-      if (/^\/\/(.*)/.test(feed.xmlUrl)) {
-        feed.xmlUrl = u.parse(feed.htmlUrl).protocol + feed.xmlUrl;
-      } else {
-        // for relative to site root xmlUrl path </rss>
-        if(/^\/(.*)/.test(feed.xmlUrl)) {
-          // parsed Page Url
-          var pu = u.parse(feed.htmlUrl);
-          feed.xmlUrl = pu.protocol + '//' + pu.host + feed.xmlUrl;
-        }
-      }
+      // turn relative urls into absolute urls
+      feed.xmlUrl = u.resolve(url, feed.xmlUrl);
+      //console.log(feed.xmlUrl);
       
       // see if we can find a favicon
       favicon.find(feed.htmlUrl, function (faviconUrl) {
@@ -240,7 +232,7 @@ var add = function (url, callback) {
 
         // add it to the database
         feeds.insert(feed, function (err, data) {
-//          console.log(err,data);
+            //console.log(err,data);
             retval = { success: true, message: "Added feed for " + url, data:data};
             callback(null, retval);
         });
