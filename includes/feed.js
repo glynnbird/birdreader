@@ -30,7 +30,7 @@ var fetchFeed = function (feed, callback) {
 
   // check that the feed is valid before fetching
   var parsed = u.parse(feed.xmlUrl);
-  if (parsed.protocol != "http" || parsed.protocol != "https" ) {
+  if (parsed.protocol != "http:" && parsed.protocol != "https:" ) {
     return callback(true, []);
   }
 
