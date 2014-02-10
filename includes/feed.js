@@ -208,7 +208,7 @@ var add = function (url, callback) {
     
     // if this is an XML feed, then add it
     if (mimeTypes.indexOf(details.contentType)>-1)  {
-      addFeed(url, url, null, url, url, function(err, data) {
+      addFeed(url, url, "rss", url, url, function(err, data) {
         callback(false,  { success: true, message: "Successfully added feed"});
       })
     } else {
