@@ -8,6 +8,7 @@ var extractor = require('extractor');
 var favicon = require('./favicon.js');
 var crypto = require('crypto');
 var u = require('url');
+var url_details = require('./url_details.js');
 
 // read all the feeds from Cloudant
 var readAll = function (callback) {
@@ -164,86 +165,123 @@ var fetchArticles = function (callback) {
   });
 };
 
+var addFeed = function(xmlurl, htmlurl, type, title, description, callback) {
+  feed = {};
+  feed.text = title;
+  feed.title = title;
+  feed.type = type;
+  feed.description = description;
+  feed.xmlUrl = xmlurl;
+  feed.htmlUrl = htmlurl;
+  feed.tags = [];
+  feed.lastModified = moment().format('YYYY-MM-DD HH:mm:ss Z');
+
+
+  // if we have found a feed
+  if (feed.xmlUrl) {
+    
+    // see if we can find a favicon
+    favicon.find(feed.htmlUrl, function (faviconUrl) {
+
+      // add icon to feed
+      feed.icon = faviconUrl;
+
+      // add it to the database
+      feeds.insert(feed, function (err, data) {
+          //console.log(err,data);
+          retval = { success: true, message: "Added feed for " + xmlurl, data:data};
+          callback(null, retval);
+      });
+    });
+  } else {
+    callback(true, null);
+  }
+
+};
+
 // add a feed for this url
 var add = function (url, callback) {
 
-  var retval = null,
-    feed = null,
-    i = null,
-    selector = {
-      'title': 'title',
-      'links': 'link',
-      'metadescription': 'meta[name=description]'
-    };
+  var mimeTypes = ["text/xml", "application/rss+xml", "application/rdf+xml", "application/atom+xml", "application/xml"];
 
-  extractor.scrape(url, selector, function (err, data, env) {
-    if (err) {
-      retval = { success: false, message: "Could not fetch" + url};
-      return callback(true, retval);
-    }
+  url_details.getHeaders(url, function(err, details) {
+    
+    // if this is an XML feed, then add it
+    if (mimeTypes.indexOf(details.contentType)>-1)  {
+      addFeed(url, url, null, url, url, function(err, data) {
+        callback(false,  { success: true, message: "Successfully added feed"});
+      })
+    } else {
+      
+      
+      // scrape the url looking for link tags
+      var retval = null,
+        feed = null,
+        i = null,
+        selector = {
+          'title': 'title',
+          'links': 'link',
+          'metadescription': 'meta[name=description]'
+        };
 
-    feed = {};
-    feed.text = data.title[0].text;
-    feed.title = data.title[0].text;
-    feed.type = null;
-    feed.description = data.metadescription;
-    feed.xmlUrl = null;
-    feed.htmlUrl = url;
-    feed.tags = [];
-    feed.lastModified = moment().format('YYYY-MM-DD HH:mm:ss Z');
+      extractor.scrape(url, selector, function (err, data, env) {
+        if (err) {
+          retval = { success: false, message: "Could not fetch" + url};
+          return callback(true, retval);
+        }
 
-    if (!data.links) {
-      return callback(true, { success: false, message: "Could not add feed for " + url});
+        if (!data.links) {
+          return callback(true, { success: false, message: "Could not add feed for " + url});
+        }
+
+        // look for matching link tags
+        var xmlurl = null;
+        var htmlurl = url;
+        var type = null;
+        var description = data.metadescription;
+        var title = data.title[0].text;
+        for (i = 0; i < data.links.length; i++) {
+          if (typeof data.links[i].type !== "undefined") {
+            if (data.links[i].type === "application/rss+xml") {
+              xmlurl = data.links[i].href;
+              type = 'rss';
+              break;
+            }
+            if (data.links[i].type === "application/atom+xml") {
+              xmlUrl = data.links[i].href;
+              type = 'rss';
+              break;
+            }
+            if (data.links[i].type === "application/rdf+xml") {
+              xmlUrl = data.links[i].href;
+              type = 'rss';
+              break;
+            }
+          }
+        }
+    
+        if(xmlurl) {
+    
+          // turn relative urls into absolute urls
+          xmlurl = u.resolve(url, xmlurl);
+          
+          //console.log(feed.xmlUrl);
+          addFeed(xmlurl, htmlurl, type, title, description, function(err, data) {
+            callback(false,  { success: true, message: "Successfully added feed"});
+          });
+        } else {
+          retval = { success: false, message: "Could not add feed for " + url};
+          callback(true, retval);
+        }
+      });
     }
     
-    // look for matching link tags
-    for (i = 0; i < data.links.length; i++) {
-      if (typeof data.links[i].type !== "undefined") {
-        if (data.links[i].type === "application/rss+xml") {
-          feed.xmlUrl = data.links[i].href;
-          feed.type = 'rss';
-          break;
-        }
-        if (data.links[i].type === "application/atom+xml") {
-          feed.xmlUrl = data.links[i].href;
-          feed.type = 'rss';
-          break;
-        }
-        if (data.links[i].type === "application/rdf+xml") {
-          feed.xmlUrl = data.links[i].href;
-          feed.type = 'rss';
-          break;
-        }
-      }
-    }
-
-    // if we have found a feed
-    if (feed.xmlUrl) {
-      
-      // turn relative urls into absolute urls
-      feed.xmlUrl = u.resolve(url, feed.xmlUrl);
-      //console.log(feed.xmlUrl);
-      
-      // see if we can find a favicon
-      favicon.find(feed.htmlUrl, function (faviconUrl) {
-
-        // add icon to feed
-        feed.icon = faviconUrl;
-
-        // add it to the database
-        feeds.insert(feed, function (err, data) {
-            //console.log(err,data);
-            retval = { success: true, message: "Added feed for " + url, data:data};
-            callback(null, retval);
-        });
-      });
-
-
-    } else {
-      retval = { success: false, message: "Could not add feed for " + url};
-      callback(true, retval);
-    }
+    
   });
+
+
+
+
 
 };
 
