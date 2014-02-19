@@ -1,10 +1,8 @@
 var apiMarkAsRead=function(id) {
   $.getJSON("api/"+id+"/read", function(data) {
-     $("#description"+id).html(data.description);
      $('img').addClass('img-responsive');
      $('img').addClass('iframe-responsive');
   });
-
 }
 
 var apiStar=function(id) {
@@ -91,6 +89,12 @@ var showAll = function() {
   });
 }
 
+var autosizeIframes = function(iframes) {
+  iframes.on('load', function () {
+    this.height = this.contentWindow.document.body.scrollHeight + "px";
+  });
+}
+
 var doBrowse = function() {
   $("#target").html("<h1>...</h1>");
   $.ajax({
@@ -98,8 +102,9 @@ var doBrowse = function() {
     cache: false
   }).done(function( html ) {
     $("#target").html(html);
+    autosizeIframes($("#target").find(".article-description"));
     $('#browsemodecount').html(latest_unread);
-    $(".nbc").collapse('hide')   ;
+    $(".nbc").collapse('hide');
     $('img').addClass('img-responsive'); 
     $('iframe').addClass('iframe-responsive');
   });
@@ -118,6 +123,7 @@ var doUnread = function() {
     data: data
   }).done(function( html ) {
     $("#target").html(html);
+    autosizeIframes($("#target").find(".article-description"));
     $(".nbc").collapse('hide')
   });
 }
@@ -135,6 +141,7 @@ var doRead = function() {
     data: data
   }).done(function( html ) {
     $("#target").html(html);
+    autosizeIframes($("#target").find(".article-description"));
     $(".nbc").collapse('hide');
   });
 }
@@ -152,6 +159,7 @@ var doStarred = function() {
     data: data
   }).done(function( html ) {
     $("#target").html(html);
+    autosizeIframes($("#target").find(".article-description"));
     $(".nbc").collapse('hide')
   });
 }
@@ -163,6 +171,7 @@ var doFeeds = function() {
     cache: false
   }).done(function( html ) {
     $("#target").html(html);
+    autosizeIframes($("#target").find(".article-description"));
     $(".nbc").collapse('hide')
   });
 }
@@ -180,6 +189,7 @@ var doSingleFeed = function() {
     data: data
   }).done(function( html ) {
     $("#target").html(html);
+    autosizeIframes($("#target").find(".article-description"));
   });
 }
 
@@ -196,6 +206,7 @@ var doSearch = function() {
     data: data
   }).done(function( html ) {
     $("#target").html(html);
+    autosizeIframes($("#target").find(".article-description"));
   });
 };
 
@@ -206,6 +217,7 @@ var doAddForm = function() {
     cache: false
   }).done(function( html ) {
     $("#target").html(html);
+    autosizeIframes($("#target").find(".article-description"));
   });
 }
 
@@ -237,7 +249,7 @@ $(document).ready(function () {
   socket.on('disconnect', function () {
     $('#connected').html(" <i class='icon icon-star-empty icon-white'></i>");
   });
-  
+
 });
 
 

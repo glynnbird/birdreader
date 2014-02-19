@@ -38,7 +38,7 @@ if !!article._id
           a.btn.mr5(href="http://www.facebook.com/sharer.php?u="+article.link,target="_new",rel="nofollow")
             i.icon-facebook
           div.mb10
-          div(id="description"+article._id)!= article.description
+          iframe(class="article-description", srcdoc="#{article.description}", sandbox="allow-same-origin", seamless="seamless")
 else
   div.row
     div.col-md-1 &nbsp;
