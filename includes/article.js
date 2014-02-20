@@ -364,9 +364,10 @@ var purge = function (purgeBefore, callback) {
 
       articles.bulk({"docs": toDelete}, function (err, d) {
         console.log("Deleted ", toDelete.length, " articles");
+        callback(err, data);
       });
     }
-    callback(err, data);
+    
   });
 };
 
