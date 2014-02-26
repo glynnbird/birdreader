@@ -1,10 +1,13 @@
 h2 Add a feed
-div Please enter the URL of an RSS feed or a an HTML which contains an RSS link tag
+p Please enter the URL of an RSS feed or a an HTML which contains an RSS link tag
 
 div#addfeedback
 
-form(onsubmit='return addFeed()')
-  label(for='url') URL
-  input(id='url',type='text',name='url')
-  div.spacer
-  input(type='submit',value='Add')
+form(onsubmit='return addFeed()',class='form-horizontal',role='form')
+  div.form-group
+    label.col-sm-1.control-label(for='url') URL
+    div.col-sm-10
+      input.form-control(id='url',type='text',name='url')
+  div.form-group
+    div.col-sm-offset-1.col-sm-11
+      input.btn.btn-success(type='submit',value='Add')

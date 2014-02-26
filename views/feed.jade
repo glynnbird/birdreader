@@ -17,19 +17,22 @@ h3 Last Article
 div #{feed.lastModified}
 
 h3 Tags
-div.tags
+div.tags.container-fluid
   each tag in feed.tags  
     a.btn.btn-lg.mr10(href='Javascript:void()',onclick="removeTag('"+id+"','"+tag+"')")
       i.glyphicon.glyphicon-remove
       span &nbsp; #{tag}
 
-h3 Add Tag
-  form(id="addtag",method="get",onsubmit="return addTag('"+id+"')")
-    input(id="tagName",name="tag")
-    input(type="submit",value="Add Tag")    
+  form#addtag(method="get",onsubmit="return addTag('"+id+"')")
+    div.row
+      div.col-sm-6
+        div.input-group
+          input#tagName.form-control(name="tag")
+          div.input-group-btn
+            input.btn.btn-success(type="submit",value="Add Tag")
 
 h3 Remove Feed
-a.btn.btn-lg.btn-danger(href='Javascript:void()',onclick="removeFeed('"+id+"')")
+a.btn.btn-danger(href='Javascript:void()',onclick="removeFeed('"+id+"')")
   i.glyphicon.glyphicon-remove
   span &nbsp; REMOVE
   
