@@ -255,6 +255,13 @@ var unstar = function (id, callback) {
   });
 };
 
+// get a single article, identified by ID
+var articleById = function (id, callback) {
+  articles.get(id, function (err, data) {
+    callback(err, data);
+  });
+};
+
 // get articles, filtered by tag
 var articlesByTag = function (type, tag, callback) {
   var retval = [],
@@ -380,6 +387,7 @@ module.exports = {
   unstar: unstar,
   stats: stats,
   counts: counts,
+  articleById: articleById,
   articlesByTag: articlesByTag,
   articlesByFeed: articlesByFeed,
   search: search,

@@ -244,6 +244,16 @@ app.get('/api/search', function (req, res) {
 
 });
 
+// get the description of an article
+app.get('/api/:id/', function (req, res, next) {
+
+  article.articleById(req.params.id, function (err, article) {
+    if (err) return next(err);
+    res.send(article.description);
+  });
+
+});
+
 // mark an article read
 app.get('/api/:id/read', function (req, res) {
 
