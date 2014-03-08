@@ -195,3 +195,7 @@ h1 {
   max-width:100%;
 }
 
+.article-description {
+  width: 100%;
+  border: none;
+}
