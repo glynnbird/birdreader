@@ -199,4 +199,5 @@ h1 {
   width: 100%;
   border: none;
   overflow: hidden;
+  min-height:100%;
 }
