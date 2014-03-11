@@ -116,9 +116,10 @@ var fetchArticles = function (callback) {
   var functions = [],
     i = 0,
     r = 0,
-    bigresults = [];
+    bigresults = [],
+    feedsToSave = [];
 
-  // load all articles from Cloudant
+  // load all feeds from Cloudant
   readAll(function (err, allFeeds) {
     
     // for each feed
@@ -127,7 +128,12 @@ var fetchArticles = function (callback) {
       // create a closure to feed to create a functions array of work to do in parallel
       (function (feed) {
         functions.push(function (cb) {
+          var before_ts = feed.lastModified;
           fetchFeed(feed, function (err, data) {
+            // if the feed has a new timestamp, put it in an array to write back to the database
+            if (feed.lastModified > before_ts) {
+              feedsToSave.push(feed);
+            }
             cb(null, data);
           });
         });
@@ -153,9 +159,12 @@ var fetchArticles = function (callback) {
         }
 
         // rewrite the feeds to the database
-        feeds.bulk({"docs": allFeeds}, function (err, d) {
-        //           console.log("Written ",allFeeds.length," feeds");
-        });
+        if (feedsToSave.length > 0) {
+          feeds.bulk({"docs": feedsToSave}, function (err, d) {
+            console.log("Written ",feedsToSave.length," feeds");
+          });
+        }
+
         callback(err, results);
       }
       
