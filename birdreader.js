@@ -15,6 +15,7 @@ var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
 io.set('log level', 1); // reduce logging
+var initError = null;
 
 // rss library
 var RSS = require('rss');
@@ -41,27 +42,38 @@ if (config.purgeArticles && config.purgeArticles.on && config.purgeArticles.purg
 
 // fetch articles every 5 minutes
 setInterval(function () {
-  feed.fetchArticles(function (err, results) {
-    console.log("Fetched articles");
-    getStats(function (err, data) {   
+  if (!initError) {
+    feed.fetchArticles(function (err, results) {
+      console.log("Fetched articles");
+      getStats(function (err, data) {   
+      });
     });
-  });
+  }
 }, 1000 * 60 * 5);
 
 // fetch articles on start, after db & views are created
-cloudant.create(function() {
-  feed.fetchArticles(function (err, results) {
-    console.log("Fetched articles");
-    getStats(function (err, data) {
+cloudant.create(function(err, data) {
+  if (!err) {
+    feed.fetchArticles(function (err, results) {
+      console.log("Fetched articles");
+      getStats(function (err, data) {
+      });
     });
-  });
+  } else {
+    initError = err;
+    console.log("Database error - "+err);
+  }
+
 });
 
 // compact the databases every 24 hours
 setInterval(function () {
-  cloudant.compact(function (err, data) {
-    console.log("database compacted");
-  });
+  if (!initError) {
+    cloudant.compact(function (err, data) {
+      console.log("database compacted");
+    });
+  }
+
 }, 1000 * 60 * 60 * 24);
 
 // fire up the jade engine
@@ -130,15 +142,17 @@ app.get('/rss.xml', function (req, res) {
 
 // home
 app.get('/', function (req, res) {
-
-  async.parallel([
-    function (callback) {
-      getStats(callback);
-    }
-  ], function (err, results) {
-    res.render('browse.jade', { title: "Browse", type: "unread", stats: results[0], articles: [] });
-  });
-
+  if(initError) {
+    res.render('initerror.jade', {title:"Datbase error", type:"unread", stats:{}, initError: initError} );
+  } else {
+    async.parallel([
+      function (callback) {
+        getStats(callback);
+      }
+    ], function (err, results) {
+      res.render('browse.jade', { title: "Browse", type: "unread", stats: results[0], articles: [] });
+    });
+  }
 });
 
 

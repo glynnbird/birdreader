@@ -1,4 +1,5 @@
 var config = require("./config.js").get;
+var _ = require('underscore');
 
 // calculate the urlstub
 var auth = "//" + config.cloudant.username + ":" + config.cloudant.password + "@";
@@ -27,7 +28,11 @@ var createFeeds = function (callback) {
   console.log("Checking feeds database");
   // create some databases
   nano.db.create('feeds', function (err, body) {
-    callback();
+    if(!err || (err && !_.isUndefined(err.status_code) && err.status_code == 412)) {
+      callback(null, body);
+    } else {
+      callback(err.reason, body);
+    }
   });
 };
 
@@ -36,7 +41,11 @@ var createArticles = function (callback) {
   console.log("Checking articles database");
   // create some databases
   nano.db.create('articles', function (err, body) {
-    callback();
+    if(!err || (err && !_.isUndefined(err.status_code) && err.status_code == 412)) {
+      callback(null, body);
+    } else {
+      callback(err.reason, body);
+    }
   });
 };
 
@@ -106,7 +115,9 @@ var compact = function (callback) {
 
 // create some databases and their views
 var create = function (cb) {
-  async.series([createFeeds, createArticles, createViews], cb);
+  async.series([createFeeds, createArticles, createViews], function(err, results) {
+    cb(err, null);
+  });
 };
 
 module.exports = {
