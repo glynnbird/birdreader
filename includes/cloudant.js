@@ -28,7 +28,7 @@ var createFeeds = function (callback) {
   console.log("Checking feeds database");
   // create some databases
   nano.db.create('feeds', function (err, body) {
-    if(!err || (err && !_.isUndefined(err.status_code) && err.status_code == 412)) {
+    if(!err || (err && typeof(err.status_code) !='undefined' && err.status_code == 412)) {
       callback(null, body);
     } else {
       callback(err.reason, body);
