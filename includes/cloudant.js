@@ -1,5 +1,4 @@
 var config = require("./config.js").get;
-var _ = require('underscore');
 
 // calculate the urlstub
 var auth = "//" + config.cloudant.username + ":" + config.cloudant.password + "@";
