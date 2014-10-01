@@ -23,13 +23,16 @@ var find = function (pageurl, callback) {
 
     // look for matching link tags
     iconurl = null;
-    for (i = 0; i < data.links.length; i++) {
-      if (typeof data.links[i].rel !== "undefined") {
-        if (data.links[i].rel === "icon" || data.links[i].rel === "shortcut icon") {
-          iconurl =  data.links[i].href;
+    if(typeof data.links == "object") {
+      for (i = 0; i < data.links.length; i++) {
+        if (typeof data.links[i].rel !== "undefined") {
+          if (data.links[i].rel === "icon" || data.links[i].rel === "shortcut icon") {
+            iconurl =  data.links[i].href;
+          }
         }
       }
     }
+
 
     if (iconurl) {
       // if this is not an absolute url

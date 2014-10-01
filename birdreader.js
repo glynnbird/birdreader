@@ -13,8 +13,6 @@ var moment = require('moment');
 var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
-var io = require('socket.io').listen(server);
-io.set('log level', 1); // reduce logging
 var initError = null;
 
 // rss library
@@ -45,8 +43,6 @@ setInterval(function () {
   if (!initError) {
     feed.fetchArticles(function (err, results) {
       console.log("Fetched articles");
-      getStats(function (err, data) {   
-      });
     });
   }
 }, 1000 * 60 * 5);
@@ -56,8 +52,6 @@ cloudant.create(function(err, data) {
   if (!err) {
     feed.fetchArticles(function (err, results) {
       console.log("Fetched articles");
-      getStats(function (err, data) {
-      });
     });
   } else {
     initError = err;
@@ -85,14 +79,8 @@ app.use(express.compress());
 // server out our static directory as static files
 app.use(express.static(__dirname + '/public'));
 
-
-// send latest totals to the client via socket.io
-var realtimeStatsUpdate = function(stats) {
-  io.sockets.emit('news', stats);
-}
-
 // fetch the stats, send via socket.io 
-var getStats = function (callback) {
+/*var getStats = function (callback) {
   article.stats(function (err, retval) {
     if(!err) {
       var keys = ['unread', 'read', 'starred'];
@@ -108,7 +96,7 @@ var getStats = function (callback) {
     }
 
   });
-};
+};*/
 
 // get starred articles as RSS feed
 app.get('/rss.xml', function (req, res) {
@@ -145,13 +133,7 @@ app.get('/', function (req, res) {
   if(initError) {
     res.render('initerror.jade', {title:"Datbase error", type:"unread", stats:{}, initError: initError} );
   } else {
-    async.parallel([
-      function (callback) {
-        getStats(callback);
-      }
-    ], function (err, results) {
-      res.render('browse.jade', { title: "Browse", type: "unread", stats: results[0], articles: [] });
-    });
+    res.render('browse.jade', { title: "Browse", type: "unread", stats: {}, articles: [] });
   }
 });
 
@@ -274,8 +256,6 @@ app.get('/api/:id/read', function (req, res) {
   // mark the supplied article as read
   article.markRead(req.params.id, function (data) {
     res.send(data);
-    getStats(function (err, data) {
-    });
   });
 
 });
@@ -367,8 +347,6 @@ app.get("/api/html/next", function (req, res) {
     res.render('browsesingle.jade', { type: "unread",
                                       article: a
       });
-    getStats(function(err,data) {
-    }); 
   });
 
 });
@@ -391,8 +369,6 @@ var renderListPage = function (title, type, data, res, counts) {
                              articles: articles,
                              counts: counts
     });
-  getStats(function(err,data) {
-  });
 }
 
 app.get("/api/html/unread", function (req, res) {
@@ -570,13 +546,6 @@ app.get('/api/feed/:id/remove', function (req, res) {
 
 });
 
-io.sockets.on('connection', function (socket) {
-
-  // send latest stats on connection
-  getStats(function(err,data) {
-  });
-  
-});
 
 console.log('Listening on port 3000');
 

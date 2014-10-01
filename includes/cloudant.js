@@ -1,8 +1,17 @@
-var config = require("./config.js").get;
+var config = require("./config.js").get,
+  url = require('url');
 
 // calculate the urlstub
-var auth = "//" + config.cloudant.username + ":" + config.cloudant.password + "@";
-var urlstub = config.cloudant.server.replace("//", auth) + ":" + config.cloudant.port;
+var opts = {
+  hostname: (config.cloudant.hostname)?config.cloudant.hostname:config.cloudant.server.replace(/^.*\/\//,""),
+  protocol: (config.cloudant.secure == true)?"https:":"http:",
+  port: config.cloudant.port
+}
+if (config.cloudant.username && config.cloudant.password) {
+  opts.auth = config.cloudant.username + ":" + config.cloudant.password;
+}
+console.log(opts, url.format(opts));
+var urlstub = url.format(opts);
 
 // start up the nano driver
 var nano = require('nano')(urlstub);

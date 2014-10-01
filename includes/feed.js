@@ -214,7 +214,10 @@ var add = function (url, callback) {
   var mimeTypes = ["text/xml", "application/rss+xml", "application/rdf+xml", "application/atom+xml", "application/xml"];
 
   url_details.getHeaders(url, function(err, details) {
-    
+    if (err) {
+      return callback(true, null);
+    } 
+
     // if this is an XML feed, then add it
     if (mimeTypes.indexOf(details.contentType)>-1)  {
       addFeed(url, url, "rss", url, url, function(err, data) {
