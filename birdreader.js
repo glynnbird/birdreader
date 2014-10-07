@@ -364,7 +364,7 @@ var renderListPage = function (title, type, data, res, counts) {
   if(typeof counts=="undefined") {
     counts={bytag:[], byfeed:[]};
   }
-  res.render('index.jade', { title: title,
+  res.render('list.jade', { title: title,
                              type: type,
                              articles: articles,
                              counts: counts
