@@ -1,11 +1,14 @@
 var config = require("./config.js").get;
 
 // calculate the urlstub
-var auth = "//" + config.cloudant.username + ":" + config.cloudant.password + "@";
+var auth = "//"
+if (config.authentication.on) {
+  auth = "//" + config.cloudant.username + ":" + config.cloudant.password + "@";
+} 
 var urlstub = config.cloudant.server.replace("//", auth) + ":" + config.cloudant.port;
 
 // start up the nano driver
-var nano = require('nano')(urlstub);
+var nano = require('cloudant')(urlstub);
 
 // connections to databases
 var feeds = nano.db.use('feeds');
@@ -27,7 +30,7 @@ var createFeeds = function (callback) {
   console.log("Checking feeds database");
   // create some databases
   nano.db.create('feeds', function (err, body) {
-    if(!err || (err && typeof(err.status_code) !='undefined' && err.status_code == 412)) {
+    if(!err || (err && typeof(err.statusCode) !='undefined' && err.statusCode == 412)) {
       callback(null, body);
     } else {
       callback(err.reason, body);
@@ -40,7 +43,7 @@ var createArticles = function (callback) {
   console.log("Checking articles database");
   // create some databases
   nano.db.create('articles', function (err, body) {
-    if(!err || (err && typeof(err.status_code) !='undefined' && err.status_code == 412)) {
+    if(!err || (err && typeof(err.statusCode) !='undefined' && err.statusCode == 412)) {
       callback(null, body);
     } else {
       callback(err.reason, body);

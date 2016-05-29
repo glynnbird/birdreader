@@ -232,7 +232,7 @@ var latest_unread = '0';
 
 $(document).ready(function () { 
   $(".nbc").collapse('hide');
-  var socket = io.connect(window.location.hostname);
+  var socket = io.connect(window.location.origin);
   socket.on('news', function (data) {
     latest_unread = data.unread;
     $('#browsecount').html(data.unread);
@@ -245,6 +245,7 @@ $(document).ready(function () {
   });
   
   socket.on('connect', function () {
+    console.log("connected");
     $('#connected').html(" <i class='icon icon-star icon-white'></i>");
   });
   socket.on('disconnect', function () {

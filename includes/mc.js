@@ -3,7 +3,7 @@ var mc = {};
 
 // fake memcache
 var set = function(key, value) {
-  var ts = moment().add('minutes',3).unix();
+  var ts = moment().add(3,'minutes').unix();
   var item = { value: value, ts:ts};
   mc[key] = item;
 };

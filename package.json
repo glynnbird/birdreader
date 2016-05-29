@@ -4,18 +4,19 @@
   "description": "Replacement for Google Reader",
   "main": "main.js",
   "dependencies": {
-    "feedparser": "0.16.2",
-    "sax": "0.5.5",
-    "request": "2.27.0",
-    "moment": "2.3.0",
-    "nano": "4.1.4",
-    "optimist": "0.6.0",
-    "async": "0.2.9",
-    "express": "3.4.3",
-    "jade": "0.35.0",
+    "async": "2.0.0-rc.5",
+    "cloudant": "1.4.1",
+    "compression": "^1.6.2",
+    "express": "4.13.4",
     "extractor": "0.1.2",
-    "socket.io": "0.9.16",
-    "rss": "0.2.1"
+    "feedparser": "1.1.4",
+    "jade": "1.11.0",
+    "moment": "2.13.0",
+    "optimist": "0.6.1",
+    "request": "2.72.0",
+    "rss": "1.2.1",
+    "sax": "1.2.1",
+    "socket.io": "1.4.6"
   },
   "devDependencies": {
     "mocha": "*"

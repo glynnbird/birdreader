@@ -12,8 +12,9 @@ var moment = require('moment');
 // we need the express framework
 var express = require('express');
 var app = express();
+var compression = require('compression');
 var server = require('http').createServer(app);
-var io = require('socket.io').listen(server);
+var io = require('socket.io')(server);
 io.set('log level', 1); // reduce logging
 var initError = null;
 
@@ -77,10 +78,10 @@ setInterval(function () {
 }, 1000 * 60 * 60 * 24);
 
 // fire up the jade engine
-app.engine('jade', require('jade').__express);
+app.set('view engine', 'jade');
 
 // use compression where appropriate
-app.use(express.compress());
+app.use(compression());
 
 // server out our static directory as static files
 app.use(express.static(__dirname + '/public'));
@@ -570,7 +571,7 @@ app.get('/api/feed/:id/remove', function (req, res) {
 
 });
 
-io.sockets.on('connection', function (socket) {
+io.on('connection', function (socket) {
 
   // send latest stats on connection
   getStats(function(err,data) {
