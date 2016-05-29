@@ -234,6 +234,7 @@ var add = function (url, callback) {
         };
 
       extractor.scrape(url, selector, function (err, data, env) {
+
         if (err) {
           retval = { success: false, message: "Could not fetch" + url};
           return callback(true, retval);
@@ -269,13 +270,13 @@ var add = function (url, callback) {
           }
         }
     
-        if(xmlurl) {
+        if(xmlUrl) {
     
           // turn relative urls into absolute urls
-          xmlurl = u.resolve(url, xmlurl);
-          
+          xmlUrl = u.resolve(url, xmlUrl);
+
           //console.log(feed.xmlUrl);
-          addFeed(xmlurl, htmlurl, type, title, description, function(err, data) {
+          addFeed(xmlUrl, htmlurl, type, title, description, function(err, data) {
             callback(false,  { success: true, message: "Successfully added feed"});
           });
         } else {
